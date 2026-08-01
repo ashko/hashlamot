@@ -457,13 +457,14 @@
 <div class="doc" dir="rtl" lang="he">
 
   <header class="mast">
-    <p class="kicker">אפיון מוצר · טיוטה 0.1</p>
+    <p class="kicker">אפיון מוצר · טיוטה 0.2</p>
     <h1>השלמות</h1>
     <p class="lede">אמא מתכננת את הבישולים. אבא קונה. שניהם רואים את אותו הדבר, בזמן אמת.</p>
     <div class="meta">
-      <span><b>מצב:</b> ממתין לאישור</span>
+      <span><b>תשתית:</b> GitHub ‏+ Supabase</span>
       <span><b>משתמשים:</b> 2 + מנהל</span>
-      <span><b>הפצה:</b> ללא חנות אפליקציות</span>
+      <span><b>הפצה:</b> PWA, ללא חנות אפליקציות</span>
+      <span><b>סופר:</b> חצי חינם</span>
     </div>
   </header>
 
@@ -747,15 +748,15 @@
   </section>
 
   <section>
-    <div class="sec-head"><span class="sec-num">07</span><h2>הסידור לפי הסופר</h2></div>
+    <div class="sec-head"><span class="sec-num">07</span><h2>הסידור לפי חצי חינם</h2></div>
     <p class="pull">הדרישה המרכזית: <b>הרשימה מסודרת לפי הסופר, לא לפי המתכון.</b></p>
-    <p>סדר ברירת המחדל — המסלול הטיפוסי בסופר ישראלי גדול:</p>
+    <p>סדר ברירת המחדל, מותאם למתכונת של חצי חינם — ירקות ופירות בחזית, דלפקי המעדנייה והקצבייה מרוכזים, מקררי הקיר אחריהם, ולא־מזון בסוף:</p>
     <ul class="depts">
       <li><span class="i">01</span> 🥬 פירות וירקות</li>
       <li><span class="i">02</span> 🥖 מאפייה ולחמים</li>
-      <li><span class="i">03</span> 🍗 בשר, עוף ודגים</li>
-      <li><span class="i">04</span> 🥛 חלב וביצים</li>
-      <li><span class="i">05</span> 🧀 גבינות ומעדנייה</li>
+      <li><span class="i">03</span> 🧀 גבינות ומעדנייה</li>
+      <li><span class="i">04</span> 🍗 בשר, עוף ודגים</li>
+      <li><span class="i">05</span> 🥛 חלב וביצים</li>
       <li><span class="i">06</span> 🥫 שימורים ומזון יבש</li>
       <li><span class="i">07</span> 🍚 אורז, פסטה וקטניות</li>
       <li><span class="i">08</span> 🧂 תבלינים ואפייה</li>
@@ -767,8 +768,9 @@
       <li><span class="i">14</span> 🧴 טואלטיקה ופארם</li>
       <li><span class="i">15</span> 📦 שונות</li>
     </ul>
+    <p class="pull">הסדר הזה הוא <b>הנחה מושכלת, לא ידיעה.</b> סניפי חצי חינם שונים זה מזה. שאלה אחת לאבא — "מה אתה עובר קודם, הגבינות או העוף?" — או גרירה אחת במסך ההגדרות, ונסגר.</p>
     <h3>התאמה לסופר של אבא</h3>
-    <p>מסך אחד בהגדרות: אותה רשימה עם ידית גרירה. אבא גורר פעם אחת כדי להתאים לסופר שלו, והסדר תקף לכל הרשימות מכאן והלאה. מחלקה בלי פריטים ברשימה הנוכחית פשוט לא מוצגת.</p>
+    <p>מסך אחד בהגדרות: אותה רשימה עם ידית גרירה. אבא גורר פעם אחת כדי להתאים לסניף שלו, והסדר תקף לכל הרשימות מכאן והלאה. מחלקה בלי פריטים ברשימה הנוכחית פשוט לא מוצגת.</p>
     <h3>איך מוצר מקבל מחלקה</h3>
     <ul>
       <li><strong>קטלוג זרוע</strong> (~250 מוצרים נפוצים) מגיע עם מחלקה משויכת מראש. מכסה את הרוב המוחלט.</li>
@@ -835,80 +837,134 @@
   </section>
 
   <section>
-    <div class="sec-head"><span class="sec-num">11</span><h2>ארכיטקטורה</h2></div>
+    <div class="sec-head"><span class="sec-num">11</span><h2>תשתית — GitHub ‏+ Supabase</h2></div>
+    <p>הכל על שני החשבונות הקיימים. אין שירות שלישי, אין חשבון חדש.</p>
     <div class="tw">
       <table>
-        <thead><tr><th>שכבה</th><th>בחירה</th><th>למה</th></tr></thead>
+        <thead><tr><th>שכבה</th><th>בחירה</th><th>הערה</th></tr></thead>
         <tbody>
-          <tr><td>ממשק</td><td class="num">React + Vite (PWA)</td><td>מהיר, סטנדרטי, קל להחזיק לאורך זמן</td></tr>
-          <tr><td>נתונים</td><td class="num">Cloud Firestore</td><td>סנכרון בזמן אמת <em>ומצב לא־מקוון</em> בקופסה אחת</td></tr>
-          <tr><td>זיהוי</td><td class="num">Anonymous Auth + קוד</td><td>בלי סיסמאות, בלי אימיילים</td></tr>
-          <tr><td>קבצים</td><td class="num">Firebase Storage</td><td>תמונות מוצרים ומתכונים</td></tr>
-          <tr><td>התראות</td><td class="num">Web Push + Cloud Function</td><td>טריגר על שינוי מסמך</td></tr>
-          <tr><td>אחסון</td><td class="num">Netlify</td><td>פריסה מגיט, HTTPS, בחינם</td></tr>
+          <tr><td>קוד</td><td class="num">GitHub</td><td>מקור אמת יחיד</td></tr>
+          <tr><td>אחסון האתר</td><td class="num">GitHub Pages</td><td>פריסה אוטומטית ב־Actions בכל דחיפה ל־main</td></tr>
+          <tr><td>בסיס נתונים</td><td class="num">Supabase Postgres</td><td>כולל RLS</td></tr>
+          <tr><td>זמן אמת</td><td class="num">Supabase Realtime</td><td><span class="num">postgres_changes</span> על טבלת הפריטים</td></tr>
+          <tr><td>זיהוי</td><td class="num">Supabase Auth</td><td>כניסה אנונימית + קוד משק בית, בלי סיסמאות</td></tr>
+          <tr><td>קבצים</td><td class="num">Supabase Storage</td><td>תמונות מוצרים ומתכונים</td></tr>
+          <tr><td>התראות</td><td class="num">Edge Function + Web Push</td><td>מופעל מ־Database Webhook</td></tr>
+          <tr><td>ממשק</td><td class="num">React + Vite + vite-plugin-pwa</td><td>סטטי לחלוטין</td></tr>
         </tbody>
       </table>
     </div>
-    <p>Firestore היא הבחירה המרכזית והיא פותרת את שתי הדרישות הקשות בבת אחת — סנכרון בזמן אמת, ועבודה בלי קליטה. אין צורך בשרת.</p>
 
-    <h3>מצב לא־מקוון — דרישה קשיחה</h3>
-    <p>בסופר, בעיקר במרתפים, אין קליטה. זה לא מקרה קצה — זה תנאי הפעלה.</p>
+    <h3>מה משתנה — והפער האמיתי היחיד</h3>
+    <p class="pull"><b>Firestore נותן עבודה לא־מקוונת בחינם. Supabase לא.</b> ל־<span class="num">supabase-js</span> אין שכבת מטמון מקומית ואין תור כתיבות.</p>
+    <p>זה נוגע בדיוק בדרישה הקשה ביותר — אבא מסמן מוצרים בסופר, איפה שאין קליטה. שכבת האופליין עוברת מ"תכונה של הספרייה" ל"רכיב שאנחנו בונים".</p>
+    <p>היקף העבודה מוגבל ומוגדר היטב, כי מה שצריך לעבוד אופליין הוא צר: אבא משנה סטטוס של שורות ברשימה אחת. אמא בבית על רשת יציבה. זה לא סנכרון דו־כיווני כללי — זה תור של עדכוני סטטוס אידמפוטנטיים. הפירוט בסעיף 12.</p>
+    <p><strong>בתמורה</strong>, Postgres נותן משהו ש־Firestore לא: מיזוג המרכיבים הופך משאילתה בצד הלקוח לשאילתת SQL אחת, במקום אחד, שאפשר לבדוק בלי להריץ את האפליקציה.</p>
+
+    <h3>שתי הערות תפעוליות</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>נושא</th><th>המצב</th><th>המענה</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>ריפו פרטי</strong></td>
+            <td>GitHub Pages בריפו פרטי דורש מנוי בתשלום</td>
+            <td>ריפו ציבורי. המפתח היחיד בקוד הוא ה־<span class="num">anon key</span> של Supabase, שנועד להיות פומבי ומוגן ב־RLS</td>
+          </tr>
+          <tr>
+            <td><strong>השהיית הפרויקט</strong></td>
+            <td class="no">פרויקט Supabase חינמי נכנס להשהיה אחרי שבוע ללא פעילות — והשימוש כאן שבועי, בדיוק על הגבול</td>
+            <td><span class="num">GitHub Actions</span> עם <span class="num">schedule</span> יומי ששולח בקשה קלה. עולה כלום, בתוך החשבונות הקיימים. חלק משלב 0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>הסיכון השני הוא האמיתי מבין השניים: חופשה או חג ידחפו אותם מעבר לשבוע, והאפליקציה תישבר בדיוק כשינסו להשתמש בה.</p>
+
+    <h3>הרשאות</h3>
+    <p>כדי להימנע מתת־שאילתה בכל בדיקה, <span class="num">household_id</span> נדחף לתוך ה־JWT דרך Custom Access Token Hook, והמדיניות הופכת להשוואה אחת:</p>
+<pre><span class="k">create policy</span> household_isolation <span class="k">on</span> list_items
+  <span class="k">for all</span>
+  <span class="k">using</span>      (household_id = (auth.jwt() -&gt;&gt; <span class="c">'household_id'</span>)::uuid)
+  <span class="k">with check</span> (household_id = (auth.jwt() -&gt;&gt; <span class="c">'household_id'</span>)::uuid);</pre>
+    <p>אותה מדיניות על כל טבלה שיש בה <span class="num">household_id</span>. משתמש לא יכול לראות או לגעת בשום דבר מחוץ למשק הבית שלו — גם עם ה־<span class="num">anon key</span> הפומבי.</p>
+
+    <h3>התראות</h3>
     <ul>
-      <li>Firestore עם <span class="num">persistentLocalCache</span>. כל סימון נכתב מקומית ומסתנכרן כשחוזרת קליטה.</li>
-      <li>שורת מצב גלויה: <strong>"לא מחובר — נשמר במכשיר"</strong> / <strong>"הכל מסונכרן ✓"</strong>.</li>
-      <li><span class="num">Screen Wake Lock</span> — המסך של אבא לא נכבה כל 30 שניות באמצע הקנייה.</li>
+      <li><strong>Database Webhook</strong> על שינוי סטטוס פריט ועל מעבר רשימה ל־<span class="num">sent</span> קורא ל־<strong>Edge Function</strong>, שמושכת את המנוי של הנמען ושולחת Web Push עם מפתחות VAPID.</li>
+      <li>אין צורך ב־Firebase. Web Push הוא תקן, ו־iOS תומך בו למי שהתקין את האפליקציה למסך הבית — ולכן ההתקנה נעשית פיזית מולם, פעם אחת.</li>
+      <li><strong>גיבוי בוואטסאפ:</strong> כפתור שמייצר טקסט נקי של הרשימה לפי מחלקות. גם ההתראה הכי אמינה נכשלת לפעמים, וזה ערוץ שהם כבר בתוכו יום־יום.</li>
     </ul>
 
-    <h3>התראות, ומסלול גיבוי</h3>
+    <h3>תמונות מוצרים — קטלוג וגם צילום</h3>
     <ul>
-      <li><strong>פוש</strong> כשנשלחת רשימה, כשמסומן חוסר או תחליף, וכשאבא מסיים.</li>
-      <li>פוש ב־iOS עובד <strong>רק</strong> אם ה־PWA הותקנה למסך הבית. ההתקנה נעשית פיזית מולם, פעם אחת.</li>
-      <li><strong>גיבוי בוואטסאפ:</strong> כפתור שמייצר טקסט נקי של הרשימה לפי מחלקות. גם ההתראה הכי אמינה נכשלת לפעמים — וזה ערוץ שהם כבר בתוכו יום־יום.</li>
-    </ul>
-
-    <h3>זיהוי ופרטיות</h3>
-    <ul>
-      <li>כניסה אנונימית + <strong>קוד משק בית בן 6 ספרות</strong>, מוקלד פעם אחת בהתקנה. אין מסך התחברות, אין "שכחתי סיסמה".</li>
-      <li>כללי Firestore: משתמש קורא וכותב רק תחת משק הבית שבו יש לו מסמך חברות.</li>
-      <li>הנתונים היחידים שנשמרים: שמות מוצרים, מתכונים, ותמונות שהם צילמו. אין מידע אישי מזהה מעבר ל"אמא"/"אבא".</li>
+      <li><strong>קטלוג זרוע</strong> — ~250 מוצרים ישראליים נפוצים עם תמונה ומחלקה, מוכנים מראש ב־Supabase Storage. מכסה את הרוב המוחלט.</li>
+      <li><strong>צילום</strong> — <span class="num">&lt;input type="file" accept="image/*" capture&gt;</span> פותח את המצלמה ישירות מהאפליקציה.</li>
+      <li>התמונה <strong>מוקטנת ל־800px ונדחסת בדפדפן לפני ההעלאה</strong>. תמונת 12 מגה־פיקסל דרך רשת סלולרית בסופר לא תעלה, ואבא יחשוב שהאפליקציה תקועה.</li>
+      <li>הצילום זמין גם לאבא: "החלפתי" מאפשר לצלם את מה שהוא כן לקח, ואמא רואה בדיוק מה נכנס לעגלה.</li>
     </ul>
   </section>
 
   <section>
-    <div class="sec-head"><span class="sec-num">12</span><h2>מודל נתונים</h2></div>
-<pre><span class="c">// כל הנתונים תחת משק בית אחד</span>
-households/{hid}
-  name, joinCode, <span class="k">departmentOrder[]</span>, createdAt
+    <div class="sec-head"><span class="sec-num">12</span><h2>נתונים ואופליין</h2></div>
+<pre><span class="k">create table</span> products (             <span class="c">-- הקטלוג, מצטבר לאורך זמן</span>
+  id, household_id, name, brand, image_url,
+  department_key, default_unit,
+  aliases text[],                    <span class="c">-- לחיפוש: "עגבניה", "שרי"</span>
+  <span class="k">usage_count</span> int, is_seed boolean
+);
 
-households/{hid}/members/{uid}
-  name, role: planner|shopper|admin, textScale, pushSubscription
+<span class="k">create table</span> recipes (id, household_id, name, image_url, times_used, last_used_at);
+<span class="k">create table</span> recipe_ingredients (id, recipe_id, product_id, quantity, unit, note);
 
-households/{hid}/products/{pid}          <span class="c">← הקטלוג, מצטבר לאורך זמן</span>
-  name, brand, imageUrl, department,
-  defaultUnit, aliases[], <span class="k">usageCount</span>, isSeed
+<span class="k">create table</span> lists (id, household_id, title, status, created_at, sent_at, done_at);
+<span class="k">create table</span> list_recipes (list_id, recipe_id);
 
-households/{hid}/recipes/{rid}
-  name, imageUrl, note, lastUsedAt, timesUsed
-  ingredients[]: { productId, quantity, unit, note }
+<span class="k">create table</span> list_items (
+  id, list_id, household_id, product_id,
 
-households/{hid}/lists/{lid}
-  title, status: draft|sent|shopping|done,
-  recipeIds[], createdAt, sentAt, doneAt,
-  stats: { total, bought, missing, substituted }
+  <span class="c">-- צילום רגעי: רשימות עבר לא משתנות אם המוצר ישונה בקטלוג</span>
+  <span class="k">name_snapshot, brand_snapshot, image_snapshot</span>, department_key,
 
-households/{hid}/lists/{lid}/items/{iid}
-  productId, <span class="k">nameSnapshot, brandSnapshot, imageSnapshot</span>, department
-  quantities[]: { value, unit }        <span class="c">← מערך, ליחידות שלא מתחברות</span>
-  sourceRecipes[]: { recipeId, name }
-  isExtra, sortIndex
-  status, substituteNote, substituteImageUrl, plannerReply
-  updatedAt, updatedBy</pre>
+  quantities   jsonb,   <span class="c">-- [{"value":1.5,"unit":"kg"}] — יחידות שלא מתחברות</span>
+  source_recipes jsonb, <span class="c">-- [{"id":"…","name":"שניצל"}]</span>
+  is_extra, sort_index,
+
+  status item_status,   <span class="c">-- pending | bought | missing | substituted</span>
+  substitute_note, substitute_image_url, planner_reply,
+
+  updated_by, updated_at,
+  <span class="k">client_updated_at</span>     <span class="c">-- הכרעת התנגשויות, ראה למטה</span>
+);
+
+<span class="k">create table</span> units (unit, family, factor);  <span class="c">-- kg→mass 1000, g→mass 1 …</span>
+<span class="k">create table</span> push_subscriptions (user_id, household_id, endpoint, p256dh, auth);</pre>
 
     <h3>שתי החלטות ששווה לשים לב אליהן</h3>
     <ul>
       <li><strong>שדות ה־snapshot בפריט.</strong> שם המוצר, המותג והתמונה מועתקים לתוך פריט הרשימה ולא נקראים מהקטלוג. אם אמא תשנה שם מוצר בעוד חודשיים, רשימות עבר לא ישתנו רטרואקטיבית.</li>
-      <li><strong><span class="num">usageCount</span> על המוצר.</strong> תוצאות החיפוש מסודרות לפי מה שהיא באמת קונה, לא לפי אלפבית. אחרי חודש, שלוש התוצאות הראשונות הן כמעט תמיד הנכונות.</li>
+      <li><strong><span class="num">usage_count</span> על המוצר.</strong> תוצאות החיפוש מסודרות לפי מה שהיא באמת קונה, לא לפי אלפבית. אחרי חודש, שלוש התוצאות הראשונות הן כמעט תמיד הנכונות.</li>
     </ul>
+
+    <h3>מיזוג המרכיבים — פונקציה אחת ב־Postgres</h3>
+<pre>build_list(household_id, recipe_ids[]) →
+  1. אוסף את כל recipe_ingredients של המתכונים הנבחרים
+  2. מצרף ל־units כדי לקבל family + factor
+  3. group by (product_id, family) → sum(quantity * factor)
+  4. ממיר חזרה ליחידה הנוחה ובונה את מערך quantities
+  5. אוסף את שמות המתכונים אל source_recipes
+  6. מחשב sort_index לפי מיקום department_key ב־department_order
+  7. מוסיף את השורות ל־list_items</pre>
+    <p>לוגיקת המיזוג יושבת במקום אחד, ליד הנתונים, וניתנת לבדיקה ב־SQL.</p>
+
+    <h3>שכבת האופליין — הרכיב שאנחנו בונים</h3>
+    <p><strong>קריאה.</strong> ברשת: שליפה וכתיבה ל־IndexedDB. בלי רשת: קריאה מ־IndexedDB — אבא פותח את האפליקציה במרתף ורואה רשימה מלאה.</p>
+    <p class="pull"><b>תמונות המוצרים חייבות להישמר במטמון ה־Service Worker.</b> בלי זה הרשימה האופליינית היא טקסט בלבד, ומאבדת בדיוק את היתרון של זיהוי חזותי מהיר.</p>
+    <p><strong>כתיבה — תור יוצא.</strong> כל שינוי סטטוס מעדכן את המצב המקומי מיד (הממשק לא ממתין לרשת אף פעם), כותב שורה ל־<span class="num">outbox</span> ב־IndexedDB, ומנסה לשלוח. המשגר רץ בעליית האפליקציה, באירוע <span class="num">online</span>, וכל 15 שניות כל עוד יש ממתינים.</p>
+    <p>הכתיבה עוברת דרך <span class="num">apply_item_update(item, patch, client_ts)</span> שמתעלמת מעדכון ישן מ־<span class="num">client_updated_at</span> הקיים. התוצאה: עדכונים אידמפוטנטיים ולא תלויי סדר — אפשר לשגר פעמיים, או להגיע באיחור אחרי עדכון חדש יותר, בלי לדרוס כלום.</p>
+    <p><strong>חיבור מחדש.</strong> Realtime לא מבטיח מסירה של אירועים שקרו בזמן ניתוק. בכל התחברות מחדש מתבצעת שליפה מלאה והתאמה מול המצב המקומי. בלי זה, אבא חוזר מהמרתף ומפספס את התשובה של אמא.</p>
+    <p><strong>מה שרואים:</strong> שורת מצב — <strong>"הכל מסונכרן ✓"</strong> / <strong>"לא מחובר — נשמר במכשיר (3)"</strong>. אף פעם לא ספינר חוסם, אף פעם לא שגיאה על חוסר רשת. חוסר קליטה בסופר הוא מצב תקין, לא תקלה. בנוסף <span class="num">Screen Wake Lock</span>, כדי שהמסך לא ייכבה כל 30 שניות.</p>
+    <p class="note">מימוש: TanStack Query עם מתמיד ל־IndexedDB בקריאה, ותור קטן בכתיבה. בלי שירות סנכרון חיצוני ובלי חשבון נוסף. היקף משוער: כמה מאות שורות במודול אחד.</p>
   </section>
 
   <section>
@@ -931,26 +987,32 @@ households/{hid}/lists/{lid}/items/{iid}
     <div class="phases">
       <div class="phase">
         <span class="st">שלב 0</span>
-        <div><h4>תשתית</h4><p>שלד PWA, Firebase, כניסה בקוד, <strong>קטלוג זרוע של ~250 מוצרים ישראליים</strong> עם תמונות ומחלקות. → האפליקציה נפתחת בטלפון ומחוברת למשק בית.</p></div>
+        <div><h4>תשתית ותוכן</h4><p>פרויקט Supabase, סכימה, RLS, כניסה בקוד. GitHub Actions לפריסה ל־Pages <strong>ולשמירת הפרויקט ער</strong>. קטלוג זרוע ~250 מוצרים. <strong>הזנת 20 המתכונים של אמא מראש.</strong> → האפליקציה נפתחת בטלפון עם כל התוכן שלה כבר בפנים.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 1</span>
-        <div><h4>הליבה</h4><p>מתכונים, בחירת מנות, מיזוג לרשימה, מסך אבא, סימון "נקנה", סנכרון בזמן אמת. → המסלול המלא עובד מקצה לקצה.</p></div>
+        <div><h4>הליבה</h4><p>בחירת מנות, <span class="num">build_list</span>, מסך אבא, סימון "נקנה", Realtime. → המסלול המלא עובד מקצה לקצה.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 2</span>
-        <div><h4>ערוץ חזרה</h4><p>חסר / הוחלף, תשובות של אמא, מסך מעקב חי, מסך סיכום. → אין יותר צורך בשיחת טלפון.</p></div>
+        <div><h4>אופליין</h4><p>מטמון IndexedDB, תור יוצא, <span class="num">apply_item_update</span>, מטמון תמונות, שורת מצב. → עובד במרתף של חצי חינם.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 3</span>
-        <div><h4>התאמות</h4><p>גרירת סדר מחלקות, צילום מוצר, גודל טקסט, שיתוף בוואטסאפ, התראות פוש. → מוכן להתקנה אצלם.</p></div>
+        <div><h4>ערוץ חזרה</h4><p>חסר / הוחלף + צילום, תשובות של אמא, מעקב חי, סיכום. → אין יותר צורך בשיחת טלפון.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 4</span>
-        <div><h4>הרצה</h4><p>התקנה פיזית על שני המכשירים, הדרכה, ליווי שבועיים, תיקונים. → הם משתמשים בזה לבד.</p></div>
+        <div><h4>התאמות</h4><p>גרירת סדר מחלקות, גודל טקסט, פוש, שיתוף בוואטסאפ. → מוכן להתקנה אצלם.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 5</span>
+        <div><h4>הרצה</h4><p>התקנה פיזית על שני המכשירים, הדרכה, ליווי שבועיים. → הם משתמשים בזה לבד.</p></div>
       </div>
     </div>
-    <p class="pull">שלב 0 הוא הקריטי ביותר ולא נראה ככה. הקטלוג הזרוע הוא ההבדל בין <b>"אמא מקלידה 40 מוצרים מאפס ונוטשת"</b> לבין <b>"היא מקלידה שתי אותיות ובוחרת מרשימה"</b>. זו העבודה שקובעת אם המוצר ישרוד את השבוע הראשון.</p>
+    <p class="pull">20 המתכונים משנים את שלב 0. במקום שאמא תעמוד מול מסך ריק ותקליד את המתכון הראשון שלה, <b>אני מזין את כל ה־20 מראש</b>. בשימוש הראשון היא פותחת ורואה את כל הרפרטואר שלה עם תמונות, ורק מקישה על ארבעה. הסיכון הגדול ביותר במוצר — שהיא לא תעבור את ההזנה הראשונה — נמחק לגמרי.</p>
+    <p>בשביל זה אני צריך את הרשימה: 20 שמות המנות, והמרכיבים והכמויות של כל אחת. שיחה אחת איתה, או דף שהיא תמלא.</p>
+    <p><strong>האופליין עלה לשלב נפרד ומוקדם.</strong> ב־Firestore הוא היה נלווה; כאן הוא רכיב, והוא קודם לערוץ החזרה — כי בלעדיו כל השאר לא שווה כלום בתוך הסופר.</p>
   </section>
 
   <section>
@@ -959,13 +1021,14 @@ households/{hid}/lists/{lid}/items/{iid}
       <table>
         <thead><tr><th>סיכון</th><th>חומרה</th><th>מענה</th></tr></thead>
         <tbody>
-          <tr><td>הרגל — דף ועט עובדים מצוין</td><td><span class="sev sev-hi">גבוה</span></td><td>קטלוג זרוע + שמירת מתכונים, כדי שמהשבוע השני זה יהיה מהיר מהדף</td></tr>
-          <tr><td>אמא לא תזין את המתכונים הראשונים</td><td><span class="sev sev-hi">גבוה</span></td><td>להזין איתה 5–6 מתכונים יחד בהתקנה. לא להשאיר אותה מול מסך ריק</td></tr>
-          <tr><td>אין קליטה בסופר</td><td><span class="sev sev-hi">גבוה</span></td><td>מצב לא־מקוון מהיום הראשון, לא כשיפור עתידי</td></tr>
+          <tr><td><strong>פרויקט Supabase נכנס להשהיה אחרי שבוע</strong></td><td><span class="sev sev-hi">גבוה</span></td><td>Cron יומי ב־GitHub Actions ששומר אותו ער. חלק משלב 0</td></tr>
+          <tr><td>הרגל — דף ועט עובדים מצוין</td><td><span class="sev sev-hi">גבוה</span></td><td>20 המתכונים מוזנים מראש; כבר מהשבוע הראשון זה מהיר מהדף</td></tr>
+          <tr><td>אין קליטה בסופר, ואין אופליין מובנה</td><td><span class="sev sev-hi">גבוה</span></td><td>שלב 2 ייעודי — תור יוצא + מטמון תמונות</td></tr>
+          <tr><td>סדר המחלקות בחצי חינם לא מדויק</td><td><span class="sev sev-md">בינוני</span></td><td>שאלה אחת לאבא, או גרירה אחת במסך ההגדרות</td></tr>
+          <tr><td>Pages דורש ריפו ציבורי בחשבון חינמי</td><td><span class="sev sev-md">בינוני</span></td><td>הריפו ציבורי; ה־<span class="num">anon key</span> נועד להיות פומבי ו־RLS מגן על הנתונים</td></tr>
           <tr><td>פוש דורש התקנה למסך הבית</td><td><span class="sev sev-md">בינוני</span></td><td>חלק מטקס ההתקנה הפיזי. וואטסאפ כגיבוי</td></tr>
           <tr><td>המסך של אבא נכבה באמצע</td><td><span class="sev sev-md">בינוני</span></td><td>Screen Wake Lock</td></tr>
           <tr><td>הם "יאבדו" את האפליקציה</td><td><span class="sev sev-md">בינוני</span></td><td>אייקון גדול ומובחן, שם בעברית, במסך הבית הראשון ליד וואטסאפ</td></tr>
-          <tr><td>אייפון ישן מ־iOS 16.4</td><td><span class="sev sev-lo">נמוך</span></td><td>הכל עובד, רק בלי פוש. וואטסאפ מכסה</td></tr>
         </tbody>
       </table>
     </div>
@@ -974,15 +1037,15 @@ households/{hid}/lists/{lid}/items/{iid}
   <section>
     <div class="sec-head"><span class="sec-num">16</span><h2>שאלות פתוחות</h2></div>
     <ol class="qs">
-      <li><b>באיזה סופר אבא קונה?</b><span>קובע את סדר המחלקות ההתחלתי, כדי שלא יצטרך לגרור כלום.</span></li>
-      <li><b>כמה מתכונים ברפרטואר הקבוע?</b><span>אם זה 15–20, אפשר להזין את כולם מראש בשלב 0 ולחסוך לאמא את ההזנה הראשונה לגמרי.</span></li>
-      <li><b>איזה דגם אייפון ואיזו גרסת iOS לכל אחד מהם?</b><span>קובע אם התראות פוש זמינות, או שנשענים על וואטסאפ.</span></li>
-      <li><b>תמונות מוצרים — קטלוג בלבד, או שאמא מצלמת?</b><span>משפיע על היקף העבודה בשלב 0.</span></li>
+      <li><b>20 המתכונים של אמא — שמות, מרכיבים וכמויות.</b><span>זה החסם היחיד לשלב 0. שיחה אחת איתה, או דף שהיא תמלא.</span></li>
+      <li><b>מה אבא עובר קודם בחצי חינם — דלפק הגבינות או הקצבייה?</b><span>שאלה אחת סוגרת את סדר המחלקות ומייתרת את הגרירה.</span></li>
+      <li><b>ריפו ציבורי, או GitHub Pro?</b><span>משפיע רק על נראות הקוד, לא על אבטחת הנתונים — אלה מוגנים ב־RLS בכל מקרה.</span></li>
       <li><b>יש עוד מישהו במשפחה שצריך גישה?</b><span>אח או אחות שקונים לפעמים משנים את מודל ההרשאות.</span></li>
     </ol>
+    <p class="note" style="margin-top:1.5rem;">נסגר בסבב הזה: הסופר הוא חצי חינם · ~20 מתכונים · שניהם על iOS עדכני, כך שפוש זמין · תמונות מקטלוג <em>וגם</em> מצילום.</p>
   </section>
 
   <hr class="end">
-  <p class="sign">השלמות · אפיון 0.1 · טיוטה לדיון</p>
+  <p class="sign">השלמות · אפיון 0.2 · GitHub ‏+ Supabase · טיוטה לדיון</p>
 
 </div>
