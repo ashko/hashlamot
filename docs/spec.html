@@ -1,0 +1,988 @@
+<title>השלמות — אפיון מוצר</title>
+<style>
+  :root {
+    --paper:   #FBFAF6;
+    --surface: #FFFFFF;
+    --ink:     #14203A;
+    --muted:   #66708A;
+    --faint:   #8A93A8;
+    --accent:  #2B5CD9;
+    --accent-soft: #EAF0FE;
+    --rule:    #E4E2DA;
+    --rule-soft: #F0EEE8;
+    --bought:  #1C7A4D;
+    --bought-bg: #E7F4EC;
+    --missing: #BE3529;
+    --missing-bg: #FBEAE8;
+    --swap:    #9E5D04;
+    --swap-bg: #FBF0DC;
+
+    --f-ui: "Assistant", "Heebo", -apple-system, BlinkMacSystemFont, "SF Hebrew", "Arial Hebrew", "Segoe UI", "Noto Sans Hebrew", sans-serif;
+    --f-data: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+
+    --col: 40rem;
+    --step: 1.5rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:   #0E1521;
+      --surface: #18202E;
+      --ink:     #E7EBF2;
+      --muted:   #99A3B8;
+      --faint:   #6D7789;
+      --accent:  #7FA3F7;
+      --accent-soft: #1B2740;
+      --rule:    #2A3446;
+      --rule-soft: #212B3A;
+      --bought:  #5CC08C;
+      --bought-bg: #14301F;
+      --missing: #F08379;
+      --missing-bg: #35181A;
+      --swap:    #E0A54A;
+      --swap-bg: #33260F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:   #0E1521;
+    --surface: #18202E;
+    --ink:     #E7EBF2;
+    --muted:   #99A3B8;
+    --faint:   #6D7789;
+    --accent:  #7FA3F7;
+    --accent-soft: #1B2740;
+    --rule:    #2A3446;
+    --rule-soft: #212B3A;
+    --bought:  #5CC08C;
+    --bought-bg: #14301F;
+    --missing: #F08379;
+    --missing-bg: #35181A;
+    --swap:    #E0A54A;
+    --swap-bg: #33260F;
+  }
+  :root[data-theme="light"] {
+    --paper:   #FBFAF6;
+    --surface: #FFFFFF;
+    --ink:     #14203A;
+    --muted:   #66708A;
+    --faint:   #8A93A8;
+    --accent:  #2B5CD9;
+    --accent-soft: #EAF0FE;
+    --rule:    #E4E2DA;
+    --rule-soft: #F0EEE8;
+    --bought:  #1C7A4D;
+    --bought-bg: #E7F4EC;
+    --missing: #BE3529;
+    --missing-bg: #FBEAE8;
+    --swap:    #9E5D04;
+    --swap-bg: #FBF0DC;
+  }
+
+  * { box-sizing: border-box; }
+
+  .doc {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-ui);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 1.25rem 6rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .doc :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* ---- shared column ---- */
+  .doc > * { max-width: var(--col); margin-inline: auto; }
+  .doc > .wide { max-width: 66rem; }
+  .doc > .bleed { max-width: none; }
+
+  /* ---- masthead ---- */
+  .mast {
+    padding: 4.5rem 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--f-data);
+    font-size: .72rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.25rem;
+  }
+  .mast h1 {
+    font-size: clamp(2.7rem, 8vw, 4.2rem);
+    line-height: 1.02;
+    font-weight: 800;
+    letter-spacing: -.025em;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--muted);
+    font-weight: 300;
+    margin: 0 0 2rem;
+    max-width: 32ch;
+    text-wrap: balance;
+  }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.75rem;
+    font-family: var(--f-data); font-size: .78rem;
+    color: var(--faint);
+  }
+  .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ---- sections ---- */
+  section { padding-top: 4rem; }
+  .sec-head {
+    display: flex; align-items: baseline; gap: .75rem;
+    margin-bottom: 1.5rem;
+  }
+  .sec-num {
+    font-family: var(--f-data);
+    font-size: .8rem;
+    color: var(--accent);
+    font-weight: 500;
+    flex: none;
+  }
+  h2 {
+    font-size: 1.9rem; font-weight: 700; letter-spacing: -.02em;
+    margin: 0; line-height: 1.2; text-wrap: balance;
+  }
+  h3 {
+    font-size: 1.15rem; font-weight: 700; margin: 2.25rem 0 .6rem;
+    letter-spacing: -.01em;
+  }
+  p { margin: 0 0 1rem; }
+  .doc p, .doc li { max-width: 66ch; }
+  strong { font-weight: 700; }
+  .note { color: var(--muted); font-size: .95rem; }
+
+  ul, ol { margin: 0 0 1rem; padding-inline-start: 1.3rem; }
+  li { margin-bottom: .4rem; }
+  li::marker { color: var(--faint); }
+
+  .pull {
+    border-inline-start: 3px solid var(--accent);
+    padding: .3rem 0 .3rem 0;
+    padding-inline-start: 1.25rem;
+    margin: 2rem 0;
+    font-size: 1.12rem;
+    line-height: 1.5;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .pull b { font-weight: 700; }
+
+  /* ---- tables ---- */
+  .tw { overflow-x: auto; margin: 1.5rem 0 2rem; }
+  table {
+    border-collapse: collapse; width: 100%;
+    font-size: .95rem; min-width: 30rem;
+  }
+  th {
+    text-align: start; font-weight: 600; font-size: .74rem;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--faint); font-family: var(--f-data);
+    padding: 0 .85rem .6rem; border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  td {
+    padding: .8rem .85rem; border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td:first-child, th:first-child { padding-inline-start: 0; }
+  td:last-child, th:last-child { padding-inline-end: 0; }
+  .num { font-family: var(--f-data); font-variant-numeric: tabular-nums; color: var(--faint); }
+
+  .yes { color: var(--bought); font-weight: 700; }
+  .no  { color: var(--missing); font-weight: 700; }
+
+  .sev { font-family: var(--f-data); font-size: .72rem; letter-spacing: .06em;
+         padding: .18rem .5rem; border-radius: 3px; white-space: nowrap; }
+  .sev-hi { background: var(--missing-bg); color: var(--missing); }
+  .sev-md { background: var(--swap-bg);    color: var(--swap); }
+  .sev-lo { background: var(--rule-soft);  color: var(--muted); }
+
+  /* ---- journey ---- */
+  .journey { display: grid; gap: 2rem; margin: 2rem 0; }
+  .beat {
+    display: grid; grid-template-columns: auto 1fr; gap: 1.25rem;
+    align-items: start;
+  }
+  .beat-who {
+    font-family: var(--f-data); font-size: .72rem; letter-spacing: .08em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: .3rem .55rem; border-radius: 3px; white-space: nowrap;
+    margin-top: .2rem;
+  }
+  .beat h4 { margin: 0 0 .35rem; font-size: 1.05rem; font-weight: 700; }
+  .beat p { margin: 0; color: var(--muted); font-size: .97rem; }
+
+  /* ---- phone mockups ---- */
+  .rail {
+    display: flex; gap: 1.5rem; overflow-x: auto;
+    padding: 1rem 1.25rem 2rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rail::-webkit-scrollbar { height: 8px; }
+  .rail::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+  .shot { flex: none; scroll-snap-align: center; width: 19rem; }
+  .shot > figcaption {
+    font-family: var(--f-data); font-size: .74rem; color: var(--faint);
+    margin-bottom: .7rem; letter-spacing: .04em;
+  }
+  .shot > figcaption b { color: var(--ink); font-weight: 600; }
+
+  .phone {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 26px;
+    overflow: hidden;
+    height: 39rem;
+    display: flex; flex-direction: column;
+    box-shadow: 0 1px 2px rgba(20,32,58,.05), 0 8px 24px -12px rgba(20,32,58,.18);
+  }
+  :root[data-theme="dark"] .phone,
+  .phone { }
+  @media (prefers-color-scheme: dark) { .phone { box-shadow: none; } }
+
+  .ph-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .55rem 1.1rem .1rem;
+    font-family: var(--f-data); font-size: .62rem; color: var(--faint);
+  }
+  .ph-body { flex: 1; overflow: hidden; padding: .4rem 0 0; }
+  .ph-foot { padding: .75rem .85rem 1.1rem; }
+
+  .ph-h1 { font-size: 1.35rem; font-weight: 800; margin: .4rem .95rem .15rem; letter-spacing: -.02em; }
+  .ph-sub { font-size: .82rem; color: var(--muted); margin: 0 .95rem .8rem; }
+
+  .btn {
+    display: block; width: 100%; text-align: center;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 12px;
+    padding: .95rem; font-size: 1.02rem; font-weight: 700;
+    font-family: inherit;
+  }
+  :root[data-theme="dark"] .btn { color: #0E1521; }
+  @media (prefers-color-scheme: dark) { .btn { color: #0E1521; } }
+  .btn-ghost {
+    background: transparent; color: var(--accent);
+    border: 1.5px dashed var(--rule); font-weight: 600;
+  }
+  @media (prefers-color-scheme: dark) { .btn-ghost { color: var(--accent); } }
+  :root[data-theme="dark"] .btn-ghost { color: var(--accent); }
+
+  /* recipe grid */
+  .rgrid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; padding: 0 .85rem; }
+  .rcard {
+    border: 1.5px solid var(--rule); border-radius: 12px;
+    padding: .7rem; height: 6.1rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: var(--paper);
+  }
+  .rcard.on { border-color: var(--bought); background: var(--bought-bg); }
+  .rcard .em { font-size: 1.5rem; line-height: 1; }
+  .rcard .nm { font-size: .93rem; font-weight: 700; }
+  .rcard .ck { color: var(--bought); font-weight: 800; font-size: .82rem; }
+  .rcard.new { border-style: dashed; align-items: center; justify-content: center;
+               color: var(--accent); font-weight: 700; font-size: .93rem; }
+
+  /* department band */
+  .dept {
+    display: flex; align-items: center; gap: .45rem;
+    font-size: .87rem; font-weight: 800; color: var(--ink);
+    background: var(--rule-soft);
+    padding: .4rem .95rem; margin-top: .5rem;
+  }
+  .dept .n { margin-inline-start: auto; font-family: var(--f-data); font-size: .72rem;
+             color: var(--faint); font-weight: 400; }
+
+  /* list rows */
+  .row {
+    display: grid; grid-template-columns: auto 1fr auto; gap: .65rem;
+    align-items: center; padding: .62rem .95rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .thumb {
+    width: 2.5rem; height: 2.5rem; border-radius: 8px;
+    background: var(--rule-soft); display: grid; place-items: center;
+    font-size: 1.2rem; flex: none;
+  }
+  .row .nm { font-size: .98rem; font-weight: 700; line-height: 1.25; }
+  .row .src { font-size: .72rem; color: var(--faint); }
+  .row .qty { font-family: var(--f-data); font-variant-numeric: tabular-nums;
+              font-size: .82rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+  .box {
+    width: 1.6rem; height: 1.6rem; border-radius: 6px;
+    border: 2px solid var(--rule); flex: none;
+    display: grid; place-items: center; font-size: .9rem; font-weight: 800;
+  }
+
+  .row.done { background: var(--bought-bg); }
+  .row.done .nm { text-decoration: line-through; color: var(--muted); }
+  .row.done .box { background: var(--bought); border-color: var(--bought); color: var(--surface); }
+  .row.gone { background: var(--missing-bg); }
+  .row.gone .box { border-color: var(--missing); color: var(--missing); }
+  .row.gone .nm { color: var(--missing); }
+  .row.swap { background: var(--swap-bg); }
+  .row.swap .box { border-color: var(--swap); color: var(--swap); }
+
+  .chip {
+    grid-column: 1 / -1; font-size: .76rem; padding: .35rem .55rem;
+    border-radius: 7px; background: var(--surface);
+    border: 1px solid var(--rule); color: var(--ink);
+  }
+  .chip b { color: var(--accent); }
+
+  .acts { grid-column: 1 / -1; display: flex; gap: .4rem; }
+  .act {
+    flex: 1; text-align: center; font-size: .78rem; font-weight: 700;
+    padding: .4rem; border-radius: 7px; border: 1.5px solid var(--rule);
+    color: var(--muted); background: var(--surface);
+  }
+
+  .prog { padding: .5rem .95rem .3rem; }
+  .prog-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .35rem; }
+  .prog-top .big { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .prog-top .sync { font-size: .7rem; color: var(--bought); font-family: var(--f-data); }
+  .track { height: .5rem; border-radius: 4px; background: var(--rule-soft); overflow: hidden; }
+  .fill { height: 100%; background: var(--bought); border-radius: 4px; }
+
+  .alert {
+    margin: .7rem .85rem; padding: .75rem .8rem;
+    border-radius: 12px; background: var(--missing-bg);
+    border: 1.5px solid var(--missing);
+  }
+  .alert .t { font-weight: 800; font-size: 1rem; color: var(--missing); margin-bottom: .5rem; }
+  .alert .opts { display: grid; gap: .35rem; }
+  .alert .opt {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 8px; padding: .5rem .6rem; font-size: .85rem; font-weight: 600;
+  }
+
+  .feed { padding: .3rem .95rem; }
+  .feed li { display: flex; gap: .5rem; font-size: .84rem; color: var(--muted);
+             padding: .38rem 0; border-bottom: 1px solid var(--rule-soft); margin: 0; }
+  .feed { list-style: none; padding-inline-start: .95rem; }
+  .feed .tm { font-family: var(--f-data); font-size: .7rem; color: var(--faint);
+              margin-inline-start: auto; white-space: nowrap; }
+
+  /* ---- type specimen ---- */
+  .spec-list { display: grid; gap: 0; margin: 1.5rem 0 2rem;
+               border-top: 1px solid var(--rule); }
+  .spec-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem;
+    align-items: center; padding: 1rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .spec-row .lbl { font-family: var(--f-data); font-size: .72rem; color: var(--faint);
+                   letter-spacing: .05em; white-space: nowrap; }
+
+  /* ---- department order grid ---- */
+  .depts {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: .5rem; margin: 1.5rem 0 1rem; padding: 0; list-style: none;
+  }
+  .depts li {
+    display: flex; align-items: center; gap: .6rem; margin: 0;
+    border: 1px solid var(--rule); border-radius: 9px;
+    padding: .6rem .7rem; font-size: .92rem; font-weight: 600;
+    background: var(--surface);
+  }
+  .depts .i { font-family: var(--f-data); font-size: .72rem; color: var(--faint);
+              font-weight: 400; min-width: 1.1rem; }
+  .depts .g { margin-inline-start: auto; color: var(--faint); font-size: .95rem; }
+
+  /* ---- code ---- */
+  pre {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 1.1rem 1.2rem; overflow-x: auto;
+    font-family: var(--f-data); font-size: .81rem; line-height: 1.65;
+    direction: ltr; text-align: left; margin: 1.25rem 0 2rem;
+    color: var(--ink);
+  }
+  pre .c { color: var(--faint); }
+  pre .k { color: var(--accent); }
+
+  /* ---- phases ---- */
+  .phases { display: grid; gap: 0; margin: 1.5rem 0 2rem; border-top: 1px solid var(--rule); }
+  .phase { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem;
+           padding: 1.15rem 0; border-bottom: 1px solid var(--rule-soft); }
+  .phase .st { font-family: var(--f-data); font-size: .78rem; color: var(--accent);
+               font-weight: 600; white-space: nowrap; padding-top: .15rem; }
+  .phase h4 { margin: 0 0 .25rem; font-size: 1.02rem; font-weight: 700; }
+  .phase p { margin: 0; font-size: .93rem; color: var(--muted); }
+
+  /* ---- questions ---- */
+  .qs { list-style: none; padding: 0; margin: 1.5rem 0 0; counter-reset: q;
+        border-top: 1px solid var(--rule); }
+  .qs li {
+    counter-increment: q; position: relative;
+    padding: 1.05rem 0 1.05rem 0; padding-inline-start: 2.4rem;
+    border-bottom: 1px solid var(--rule-soft); margin: 0;
+  }
+  .qs li::before {
+    content: counter(q); position: absolute; inset-inline-start: 0; top: 1.05rem;
+    font-family: var(--f-data); font-size: .76rem; color: var(--accent);
+    border: 1px solid var(--rule); border-radius: 50%;
+    width: 1.6rem; height: 1.6rem; display: grid; place-items: center;
+  }
+  .qs b { display: block; font-weight: 700; margin-bottom: .1rem; }
+  .qs span { color: var(--muted); font-size: .93rem; }
+
+  hr.end { border: none; border-top: 1px solid var(--rule); margin: 4rem 0 0; }
+  .sign { font-family: var(--f-data); font-size: .74rem; color: var(--faint);
+          padding-top: 1.25rem; }
+
+  @media (max-width: 34rem) {
+    .beat { grid-template-columns: 1fr; gap: .4rem; }
+    .beat-who { justify-self: start; }
+    .phase { grid-template-columns: 1fr; gap: .3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="doc" dir="rtl" lang="he">
+
+  <header class="mast">
+    <p class="kicker">אפיון מוצר · טיוטה 0.1</p>
+    <h1>השלמות</h1>
+    <p class="lede">אמא מתכננת את הבישולים. אבא קונה. שניהם רואים את אותו הדבר, בזמן אמת.</p>
+    <div class="meta">
+      <span><b>מצב:</b> ממתין לאישור</span>
+      <span><b>משתמשים:</b> 2 + מנהל</span>
+      <span><b>הפצה:</b> ללא חנות אפליקציות</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>הבעיה</h2></div>
+    <p>מדי יום רביעי אמא מתחילה בהכנות לסוף השבוע. היא יודעת אילו מנות היא רוצה להכין, גוזרת מהן בראש רשימת מרכיבים, כותבת ביד על דף, ומעבירה לאבא. אבא לוקח את הדף לסופר ועובר בין המדפים.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>הכאב</th><th>מה קורה היום</th></tr></thead>
+        <tbody>
+          <tr><td><strong>עבודה כפולה</strong></td><td>אותם מרכיבים נכתבים מחדש כל שבוע, בכתב יד</td></tr>
+          <tr><td><strong>סדר לא נכון</strong></td><td>הרשימה לפי מתכון, הסופר לפי מחלקות — אבא מסתובב הלוך ושוב</td></tr>
+          <tr><td><strong>אין ערוץ חזרה</strong></td><td>מוצר חסר במדף? להתקשר, לנחש, או לוותר</td></tr>
+          <tr><td><strong>שכחות</strong></td><td>פריט שנשמט מהדף מתגלה רק כשמתחילים לבשל</td></tr>
+          <tr><td><strong>אין זיכרון</strong></td><td>"כמה עגבניות לקוגל?" — התשובה קיימת רק בראש של אמא</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>המטרה</h2></div>
+    <p>לצמצם את התכנון של אמא מ־20 דקות כתיבה ידנית לפחות מ־3 דקות הקשות, ולתת לאבא רשימה מסודרת לפי הדרך שהוא הולך בסופר — עם ערוץ חזרה חי כשמשהו חסר.</p>
+    <h3>מדדי הצלחה</h3>
+    <ol>
+      <li>אמא בונה רשימה שלמה בפחות מ־3 דקות, לבד.</li>
+      <li>אבא משלים קנייה בלי אף שיחת טלפון של הבהרה.</li>
+      <li>אפס פריטים נשכחים בשבועיים רצופים.</li>
+      <li>שניהם משתמשים בזה שבוע רביעי ברציפות — בלי שנזכיר להם.</li>
+    </ol>
+    <p class="pull">המדד הרביעי הוא היחיד שבאמת חשוב. <b>דף ועט זה ממשק מצוין</b> — אפליקציה מנצחת אותו רק אם היא מהירה יותר ממנו כבר בשבוע השני.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>המשתמשים</h2></div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>מי</th><th>תפקיד</th><th>מה הוא עושה</th></tr></thead>
+        <tbody>
+          <tr><td><strong>אמא</strong></td><td class="num">planner</td><td>בוחרת מנות, מאשרת רשימה, עונה כשחסר משהו</td></tr>
+          <tr><td><strong>אבא</strong></td><td class="num">shopper</td><td>מקבל רשימה, מסמן מה נקנה, מדווח על חוסרים</td></tr>
+          <tr><td><strong>אתה</strong></td><td class="num">admin</td><td>הקמה, קטלוג מוצרים, תמיכה מרחוק</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>התפקיד השלישי הוא לא פרט טכני — הוא הנחת יסוד עיצובית. אף פעולת תחזוקה לא נופלת עליהם. הם רואים שני מסכים בסך הכל.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>המסע — יום רביעי</h2></div>
+    <p>זה לב האפיון. כל שאר המסמך משרת את הרצף הזה.</p>
+
+    <div class="journey">
+      <div class="beat">
+        <span class="beat-who">אמא · בוקר</span>
+        <div>
+          <h4>"מה מבשלים לשבת?"</h4>
+          <p>שאלה אחת גדולה, ומתחתיה רשת המתכונים שלה עם תמונות. היא מקישה על שניצל, מרק עוף, קוגל, סלט חצילים. כל אחד שנבחר מקבל מסגרת ירוקה.</p>
+        </div>
+      </div>
+      <div class="beat">
+        <span class="beat-who">אמא · פעם אחת</span>
+        <div>
+          <h4>מנה חדשה — המרכיבים נשמרים לתמיד</h4>
+          <p>שם, תמונה, ומרכיבים בחיפוש־תוך־כדי־הקלדה מתוך קטלוג מוכן. בשבוע הבא המתכון כבר שם עם כל המרכיבים. זה המנוע של כל המוצר.</p>
+        </div>
+      </div>
+      <div class="beat">
+        <span class="beat-who">אמא · שנייה</span>
+        <div>
+          <h4>"הכנת רשימה"</h4>
+          <p>המערכת ממזגת מרכיבים מכל המנות, מאחדת כפילויות, מחברת כמויות, ומסדרת לפי מחלקות. היא רואה 23 מוצרים, מתקנת כמות, ומוסיפה מה שלא קשור למתכון.</p>
+        </div>
+      </div>
+      <div class="beat">
+        <span class="beat-who">אבא · בסופר</span>
+        <div>
+          <h4>הרשימה בסדר ההליכה שלו</h4>
+          <p>קודם ירקות, אחר כך מאפייה, אחר כך קצבייה. כל שורה: תמונה, שם גדול, כמות. הקשה על השורה כולה = נקנה. פס התקדמות קבוע למעלה.</p>
+        </div>
+      </div>
+      <div class="beat">
+        <span class="beat-who">אבא · כשחסר</span>
+        <div>
+          <h4>"חסר" או "החלפתי"</h4>
+          <p>שני כפתורים בשורה. "החלפתי" פותח שדה קצר ואפשרות לצלם את מה שהוא כן לקח.</p>
+        </div>
+      </div>
+      <div class="beat">
+        <span class="beat-who">אמא · במקביל</span>
+        <div>
+          <h4>התשובה חוזרת תוך שניות</h4>
+          <p>התראה: "חסר: פטרוזיליה" — ושלושה כפתורי תשובה. התשובה מופיעה אצל אבא על השורה עצמה. בסוף היא מקבלת סיכום: "אבא סיים. נקנו 21, חסרים 2."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bleed">
+    <div style="max-width:40rem;margin-inline:auto;padding:0 0 0;">
+      <div class="sec-head"><span class="sec-num">05</span><h2>המסכים</h2></div>
+      <p style="padding-inline:0;">ארבעת המסכים המרכזיים. הפריסה והמצבים אמיתיים; גדלי הגופן כאן מוקטנים כדי שהמסכים ייכנסו זה לצד זה — הגדלים האמיתיים בסעיף 6.</p>
+    </div>
+
+    <div class="rail">
+
+      <figure class="shot">
+        <figcaption><b>אמא</b> · בחירת מנות</figcaption>
+        <div class="phone">
+          <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="ph-body">
+            <div class="ph-h1">מה מבשלים לשבת?</div>
+            <div class="ph-sub">נבחרו 4 מנות</div>
+            <div class="rgrid">
+              <div class="rcard on"><span class="em">🍗</span><span class="nm">שניצל</span><span class="ck">✓ נבחר</span></div>
+              <div class="rcard on"><span class="em">🍲</span><span class="nm">מרק עוף</span><span class="ck">✓ נבחר</span></div>
+              <div class="rcard on"><span class="em">🥘</span><span class="nm">קוגל ירושלמי</span><span class="ck">✓ נבחר</span></div>
+              <div class="rcard on"><span class="em">🍆</span><span class="nm">סלט חצילים</span><span class="ck">✓ נבחר</span></div>
+              <div class="rcard"><span class="em">🐟</span><span class="nm">דג מרוקאי</span><span class="ck">&nbsp;</span></div>
+              <div class="rcard new">+ מנה חדשה</div>
+            </div>
+          </div>
+          <div class="ph-foot"><div class="btn">הכנת רשימה</div></div>
+        </div>
+      </figure>
+
+      <figure class="shot">
+        <figcaption><b>אמא</b> · אישור הרשימה</figcaption>
+        <div class="phone">
+          <div class="ph-bar"><span>9:43</span><span>▮▮▮</span></div>
+          <div class="ph-body">
+            <div class="ph-h1">הרשימה</div>
+            <div class="ph-sub">23 מוצרים · מ־4 מנות</div>
+            <div style="padding:0 .85rem .5rem;"><div class="btn btn-ghost">+ להוסיף עוד משהו</div></div>
+            <div class="dept">🥬 פירות וירקות <span class="n">5</span></div>
+            <div class="row">
+              <div class="thumb">🍅</div>
+              <div><div class="nm">עגבניות</div><div class="src">לשניצל, לסלט</div></div>
+              <div class="qty">קילו וחצי</div>
+            </div>
+            <div class="row">
+              <div class="thumb">🧅</div>
+              <div><div class="nm">בצל</div><div class="src">לקוגל, למרק</div></div>
+              <div class="qty">5 יחידות</div>
+            </div>
+            <div class="row">
+              <div class="thumb">🌿</div>
+              <div><div class="nm">פטרוזיליה</div><div class="src">למרק</div></div>
+              <div class="qty">צרור</div>
+            </div>
+            <div class="dept">🍗 בשר, עוף ודגים <span class="n">2</span></div>
+            <div class="row">
+              <div class="thumb">🍗</div>
+              <div><div class="nm">חזה עוף</div><div class="src">לשניצל</div></div>
+              <div class="qty">2 ק״ג</div>
+            </div>
+          </div>
+          <div class="ph-foot"><div class="btn">לשלוח לאבא</div></div>
+        </div>
+      </figure>
+
+      <figure class="shot">
+        <figcaption><b>אבא</b> · בסופר</figcaption>
+        <div class="phone">
+          <div class="ph-bar"><span>10:12</span><span>▮▮▮</span></div>
+          <div class="prog">
+            <div class="prog-top"><span class="big">12 מתוך 23</span><span class="sync">מסונכרן ✓</span></div>
+            <div class="track"><div class="fill" style="width:52%"></div></div>
+          </div>
+          <div class="ph-body">
+            <div class="dept">🥬 פירות וירקות <span class="n">5</span></div>
+            <div class="row done">
+              <div class="box">✓</div>
+              <div><div class="nm">עגבניות</div><div class="src">קילו וחצי</div></div>
+              <div class="qty">נקנה</div>
+            </div>
+            <div class="row gone">
+              <div class="box">✗</div>
+              <div><div class="nm">פטרוזיליה</div><div class="src">צרור</div></div>
+              <div class="qty">חסר</div>
+              <div class="chip"><b>אמא:</b> קח כוסברה במקום</div>
+            </div>
+            <div class="row swap">
+              <div class="box">⇄</div>
+              <div><div class="nm">שמנת חמוצה</div><div class="src">לקחתי תנובה 15%</div></div>
+              <div class="qty">הוחלף</div>
+            </div>
+            <div class="dept">🍗 בשר, עוף ודגים <span class="n">2</span></div>
+            <div class="row">
+              <div class="box">&nbsp;</div>
+              <div><div class="nm">חזה עוף</div><div class="src">2 ק״ג · לשניצל</div></div>
+              <div class="qty">&nbsp;</div>
+              <div class="acts"><span class="act">חסר</span><span class="act">החלפתי</span></div>
+            </div>
+          </div>
+          <div class="ph-foot"><div class="btn">סיימתי</div></div>
+        </div>
+      </figure>
+
+      <figure class="shot">
+        <figcaption><b>אמא</b> · מעקב חי</figcaption>
+        <div class="phone">
+          <div class="ph-bar"><span>10:12</span><span>▮▮▮</span></div>
+          <div class="ph-body">
+            <div class="ph-h1">אבא בסופר</div>
+            <div class="ph-sub">התחיל לפני 18 דקות</div>
+            <div class="prog">
+              <div class="prog-top"><span class="big">12 מתוך 23</span></div>
+              <div class="track"><div class="fill" style="width:52%"></div></div>
+            </div>
+            <div class="alert">
+              <div class="t">חסר: פטרוזיליה</div>
+              <div class="opts">
+                <div class="opt">קח כוסברה במקום</div>
+                <div class="opt">לא צריך, נסתדר</div>
+                <div class="opt">תכתוב לי הודעה</div>
+              </div>
+            </div>
+            <ul class="feed">
+              <li>עגבניות — נקנה <span class="tm">10:11</span></li>
+              <li>שמנת חמוצה — הוחלף <span class="tm">10:09</span></li>
+              <li>בצל — נקנה <span class="tm">10:07</span></li>
+              <li>לחם אחיד — נקנה <span class="tm">10:04</span></li>
+            </ul>
+          </div>
+        </div>
+      </figure>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>ממשק לגיל השלישי</h2></div>
+    <p>מספרים, לא תארים. הגדלים למטה מוצגים כאן בגודלם האמיתי — אפשר להחזיק טלפון ליד המסך ולבדוק.</p>
+
+    <div class="spec-list">
+      <div class="spec-row">
+        <span style="font-size:30px;font-weight:800;line-height:1.2;">פירות וירקות</span>
+        <span class="lbl">כותרת מחלקה · 30px / 800</span>
+      </div>
+      <div class="spec-row">
+        <span style="font-size:26px;font-weight:600;line-height:1.3;">עגבניות שרי</span>
+        <span class="lbl">שם מוצר · 26px / 600</span>
+      </div>
+      <div class="spec-row">
+        <span style="font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;">קילו וחצי</span>
+        <span class="lbl">כמות · 24px / 700</span>
+      </div>
+      <div class="spec-row">
+        <span style="font-size:20px;line-height:1.5;">טקסט רגיל באפליקציה</span>
+        <span class="lbl">גוף · 20px (ברירת מחדל: 23px)</span>
+      </div>
+      <div class="spec-row">
+        <span style="font-size:17px;color:var(--muted);">לשניצל, למרק</span>
+        <span class="lbl">מקור המרכיב · 17px — המינימום המוחלט</span>
+      </div>
+    </div>
+
+    <h3>מגע</h3>
+    <ul>
+      <li>אזור הקשה מינימלי <strong>68×68px</strong>. שורת מוצר: <strong>96px</strong> גובה, כל הרוחב לחיץ.</li>
+      <li>מרווח מינימלי בין יעדי הקשה: 12px. אין כפתורים צמודים.</li>
+      <li>אין החלקה, אין הקשה כפולה, אין לחיצה ארוכה כפעולה יחידה — כל פעולה זמינה בהקשה רגילה.</li>
+    </ul>
+
+    <h3>ניווט</h3>
+    <ul>
+      <li>שני מסכים ראשיים לכל משתמש. אין תפריט המבורגר, אין תפריטים מקוננים.</li>
+      <li>פעולה ראשית <strong>אחת</strong> לכל מסך, כפתור ברוחב מלא בתחתית.</li>
+      <li>אין חלונות קופצים חוסמים. שינוי נשמר מציג הודעה קצרה ונעלמת.</li>
+    </ul>
+
+    <h3>ניגודיות ועמידות</h3>
+    <ul>
+      <li>ניגודיות מינימלית לגוף טקסט <strong>7:1</strong>. אין אפור על אפור.</li>
+      <li>מצב אף פעם לא מקודד בצבע בלבד — תמיד צבע <strong>וגם</strong> אייקון <strong>וגם</strong> שינוי טקסט.</li>
+      <li>מחיקה דורשת אישור אחד, עם ביטול זמין 10 שניות.</li>
+      <li>שדות טקסט רגילים, כך שהכתבה קולית של iOS עובדת מהקופסה.</li>
+    </ul>
+    <p class="note">גודל טקסט גלובלי בהגדרות: רגיל 20 / גדול 23 / ענק 27. ברירת המחדל היא <strong>גדול</strong>.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>הסידור לפי הסופר</h2></div>
+    <p class="pull">הדרישה המרכזית: <b>הרשימה מסודרת לפי הסופר, לא לפי המתכון.</b></p>
+    <p>סדר ברירת המחדל — המסלול הטיפוסי בסופר ישראלי גדול:</p>
+    <ul class="depts">
+      <li><span class="i">01</span> 🥬 פירות וירקות</li>
+      <li><span class="i">02</span> 🥖 מאפייה ולחמים</li>
+      <li><span class="i">03</span> 🍗 בשר, עוף ודגים</li>
+      <li><span class="i">04</span> 🥛 חלב וביצים</li>
+      <li><span class="i">05</span> 🧀 גבינות ומעדנייה</li>
+      <li><span class="i">06</span> 🥫 שימורים ומזון יבש</li>
+      <li><span class="i">07</span> 🍚 אורז, פסטה וקטניות</li>
+      <li><span class="i">08</span> 🧂 תבלינים ואפייה</li>
+      <li><span class="i">09</span> 🫒 שמן, רטבים וממרחים</li>
+      <li><span class="i">10</span> 🍫 חטיפים ומתוקים</li>
+      <li><span class="i">11</span> ☕ משקאות, קפה ותה</li>
+      <li><span class="i">12</span> 🧊 קפואים</li>
+      <li><span class="i">13</span> 🧻 ניקיון וחד״פ</li>
+      <li><span class="i">14</span> 🧴 טואלטיקה ופארם</li>
+      <li><span class="i">15</span> 📦 שונות</li>
+    </ul>
+    <h3>התאמה לסופר של אבא</h3>
+    <p>מסך אחד בהגדרות: אותה רשימה עם ידית גרירה. אבא גורר פעם אחת כדי להתאים לסופר שלו, והסדר תקף לכל הרשימות מכאן והלאה. מחלקה בלי פריטים ברשימה הנוכחית פשוט לא מוצגת.</p>
+    <h3>איך מוצר מקבל מחלקה</h3>
+    <ul>
+      <li><strong>קטלוג זרוע</strong> (~250 מוצרים נפוצים) מגיע עם מחלקה משויכת מראש. מכסה את הרוב המוחלט.</li>
+      <li><strong>מוצר חדש</strong> — אחרי הקלדת השם מופיעה רשת של 15 אריחים גדולים עם אייקון וצבע. הקשה אחת, לא רשימה נפתחת.</li>
+      <li>דילגה? המוצר נוחת ב"שונות" בסוף הרשימה. הוא לא הולך לאיבוד.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>מיזוג כמויות</h2></div>
+    <p>כששני מתכונים דורשים את אותו מוצר, הוא מופיע פעם אחת עם הכמות המחוברת.</p>
+    <ul>
+      <li>כמויות מתחברות רק בתוך אותה משפחת יחידות: <strong>משקל</strong> (ק״ג/גרם), <strong>נפח</strong> (ליטר/מ״ל), <strong>ספירה</strong> (יחידה, חבילה, קופסה, צרור, שקית — כל אחת נפרד).</li>
+      <li>ק״ג ממתכון אחד + גרם מאחר → מומרים, מחוברים, ומוצגים ביחידה הנוחה: <span class="num">1000 + 500 → 1.5 ק״ג</span>.</li>
+      <li>יחידות שלא מתחברות מוצגות זו לצד זו: <strong>עגבניות — 2 ק״ג + 3 יחידות</strong>.</li>
+    </ul>
+    <p class="pull">ניסוח אנושי של כמויות. לא <span class="num">0.5 ק״ג</span> אלא <b>"חצי קילו"</b>. לא <span class="num">1.5</span> אלא <b>"קילו וחצי"</b>. שברים נפוצים נכתבים במילים.</p>
+    <p>מתחת לכל שורה, בקטן: <strong>"לשניצל, למרק"</strong> — עוזר לאבא כשהוא מתלבט, ולאמא כשהיא בודקת.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>מצבי מוצר</h2></div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>מצב</th><th>מי מסמן</th><th>אצל אבא</th><th>אצל אמא</th></tr></thead>
+        <tbody>
+          <tr><td><strong>לקנות</strong><br><span class="num">pending</span></td><td>ברירת מחדל</td><td>ריבוע ריק</td><td>נספר ב"נשאר"</td></tr>
+          <tr><td><strong>נקנה</strong><br><span class="num">bought</span></td><td>אבא</td><td><span class="yes">ירוק ✓</span>, טקסט מחוק</td><td>מתקדם בפס ההתקדמות</td></tr>
+          <tr><td><strong>חסר</strong><br><span class="num">missing</span></td><td>אבא</td><td><span class="no">אדום ✗</span></td><td><strong>התראה מיידית</strong> + 3 כפתורי תשובה</td></tr>
+          <tr><td><strong>הוחלף</strong><br><span class="num">substituted</span></td><td>אבא</td><td>כתום ⇄, טקסט ותמונה</td><td>התראה + פירוט מה נלקח</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>איך זה מגיע לאייפון</h2></div>
+    <p>הבקשה היא אפליקציה שלא עולה לחנות. שלוש הדרכים, ובחירה אחת:</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>גישה</th><th>עלות</th><th>תוקף</th><th>עדכונים</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>PWA למסך הבית</strong></td><td>—</td>
+            <td class="yes">קבוע</td>
+            <td>מיידיים, בלי מגע בטלפון שלהם</td>
+            <td class="yes">הבחירה</td>
+          </tr>
+          <tr>
+            <td>TestFlight</td><td class="num">$99/שנה</td>
+            <td class="no">פג כל 90 יום</td>
+            <td>דורש מהם לעדכן ידנית</td><td class="no">✗</td>
+          </tr>
+          <tr>
+            <td>Xcode, חשבון חינמי</td><td>—</td>
+            <td class="no">פג כל 7 ימים</td>
+            <td>חיבור פיזי למחשב</td><td class="no">✗</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>TestFlight נופל על ה־90 יום: כל רבעון מישהו צריך להיכנס לטלפון של ההורים ולעדכן. חשבון חינמי בלתי אפשרי — שבוע ונגמר.</p>
+    <p><strong>PWA נותן:</strong> אייקון על מסך הבית, מסך מלא בלי סרגל דפדפן, התראות פוש (iOS 16.4+, בתנאי שהותקן למסך הבית), עבודה במצב לא־מקוון, ועדכונים שאתה דוחף מהמחשב בלי לגעת במכשירים שלהם. המחיר היחיד: אין גישה מקומית למצלמה — אבל <span class="num">&lt;input capture&gt;</span> פותח את המצלמה, וזה כל מה שצריך.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>ארכיטקטורה</h2></div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>שכבה</th><th>בחירה</th><th>למה</th></tr></thead>
+        <tbody>
+          <tr><td>ממשק</td><td class="num">React + Vite (PWA)</td><td>מהיר, סטנדרטי, קל להחזיק לאורך זמן</td></tr>
+          <tr><td>נתונים</td><td class="num">Cloud Firestore</td><td>סנכרון בזמן אמת <em>ומצב לא־מקוון</em> בקופסה אחת</td></tr>
+          <tr><td>זיהוי</td><td class="num">Anonymous Auth + קוד</td><td>בלי סיסמאות, בלי אימיילים</td></tr>
+          <tr><td>קבצים</td><td class="num">Firebase Storage</td><td>תמונות מוצרים ומתכונים</td></tr>
+          <tr><td>התראות</td><td class="num">Web Push + Cloud Function</td><td>טריגר על שינוי מסמך</td></tr>
+          <tr><td>אחסון</td><td class="num">Netlify</td><td>פריסה מגיט, HTTPS, בחינם</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Firestore היא הבחירה המרכזית והיא פותרת את שתי הדרישות הקשות בבת אחת — סנכרון בזמן אמת, ועבודה בלי קליטה. אין צורך בשרת.</p>
+
+    <h3>מצב לא־מקוון — דרישה קשיחה</h3>
+    <p>בסופר, בעיקר במרתפים, אין קליטה. זה לא מקרה קצה — זה תנאי הפעלה.</p>
+    <ul>
+      <li>Firestore עם <span class="num">persistentLocalCache</span>. כל סימון נכתב מקומית ומסתנכרן כשחוזרת קליטה.</li>
+      <li>שורת מצב גלויה: <strong>"לא מחובר — נשמר במכשיר"</strong> / <strong>"הכל מסונכרן ✓"</strong>.</li>
+      <li><span class="num">Screen Wake Lock</span> — המסך של אבא לא נכבה כל 30 שניות באמצע הקנייה.</li>
+    </ul>
+
+    <h3>התראות, ומסלול גיבוי</h3>
+    <ul>
+      <li><strong>פוש</strong> כשנשלחת רשימה, כשמסומן חוסר או תחליף, וכשאבא מסיים.</li>
+      <li>פוש ב־iOS עובד <strong>רק</strong> אם ה־PWA הותקנה למסך הבית. ההתקנה נעשית פיזית מולם, פעם אחת.</li>
+      <li><strong>גיבוי בוואטסאפ:</strong> כפתור שמייצר טקסט נקי של הרשימה לפי מחלקות. גם ההתראה הכי אמינה נכשלת לפעמים — וזה ערוץ שהם כבר בתוכו יום־יום.</li>
+    </ul>
+
+    <h3>זיהוי ופרטיות</h3>
+    <ul>
+      <li>כניסה אנונימית + <strong>קוד משק בית בן 6 ספרות</strong>, מוקלד פעם אחת בהתקנה. אין מסך התחברות, אין "שכחתי סיסמה".</li>
+      <li>כללי Firestore: משתמש קורא וכותב רק תחת משק הבית שבו יש לו מסמך חברות.</li>
+      <li>הנתונים היחידים שנשמרים: שמות מוצרים, מתכונים, ותמונות שהם צילמו. אין מידע אישי מזהה מעבר ל"אמא"/"אבא".</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">12</span><h2>מודל נתונים</h2></div>
+<pre><span class="c">// כל הנתונים תחת משק בית אחד</span>
+households/{hid}
+  name, joinCode, <span class="k">departmentOrder[]</span>, createdAt
+
+households/{hid}/members/{uid}
+  name, role: planner|shopper|admin, textScale, pushSubscription
+
+households/{hid}/products/{pid}          <span class="c">← הקטלוג, מצטבר לאורך זמן</span>
+  name, brand, imageUrl, department,
+  defaultUnit, aliases[], <span class="k">usageCount</span>, isSeed
+
+households/{hid}/recipes/{rid}
+  name, imageUrl, note, lastUsedAt, timesUsed
+  ingredients[]: { productId, quantity, unit, note }
+
+households/{hid}/lists/{lid}
+  title, status: draft|sent|shopping|done,
+  recipeIds[], createdAt, sentAt, doneAt,
+  stats: { total, bought, missing, substituted }
+
+households/{hid}/lists/{lid}/items/{iid}
+  productId, <span class="k">nameSnapshot, brandSnapshot, imageSnapshot</span>, department
+  quantities[]: { value, unit }        <span class="c">← מערך, ליחידות שלא מתחברות</span>
+  sourceRecipes[]: { recipeId, name }
+  isExtra, sortIndex
+  status, substituteNote, substituteImageUrl, plannerReply
+  updatedAt, updatedBy</pre>
+
+    <h3>שתי החלטות ששווה לשים לב אליהן</h3>
+    <ul>
+      <li><strong>שדות ה־snapshot בפריט.</strong> שם המוצר, המותג והתמונה מועתקים לתוך פריט הרשימה ולא נקראים מהקטלוג. אם אמא תשנה שם מוצר בעוד חודשיים, רשימות עבר לא ישתנו רטרואקטיבית.</li>
+      <li><strong><span class="num">usageCount</span> על המוצר.</strong> תוצאות החיפוש מסודרות לפי מה שהיא באמת קונה, לא לפי אלפבית. אחרי חודש, שלוש התוצאות הראשונות הן כמעט תמיד הנכונות.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">13</span><h2>מה לא בגרסה הראשונה</h2></div>
+    <p>הגבול הזה הוא חלק מהאפיון, לא השמטה:</p>
+    <ul>
+      <li>סריקת ברקוד</li>
+      <li>השוואת מחירים או ריבוי רשתות</li>
+      <li>ייבוא מתכונים מאתרי אינטרנט</li>
+      <li>לוח מנות שבועי / תכנון תפריט</li>
+      <li>ניהול מלאי במזווה</li>
+      <li>יותר משלושה משתמשים או ממשק בית אחד</li>
+      <li>העלאה לחנות האפליקציות</li>
+    </ul>
+    <p class="pull">כל אחד מאלה מוסיף מסך או החלטה — ומסך נוסף הוא <b>בדיוק</b> מה שיחזיר אותם לדף ולעט.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">14</span><h2>תוכנית עבודה</h2></div>
+    <div class="phases">
+      <div class="phase">
+        <span class="st">שלב 0</span>
+        <div><h4>תשתית</h4><p>שלד PWA, Firebase, כניסה בקוד, <strong>קטלוג זרוע של ~250 מוצרים ישראליים</strong> עם תמונות ומחלקות. → האפליקציה נפתחת בטלפון ומחוברת למשק בית.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 1</span>
+        <div><h4>הליבה</h4><p>מתכונים, בחירת מנות, מיזוג לרשימה, מסך אבא, סימון "נקנה", סנכרון בזמן אמת. → המסלול המלא עובד מקצה לקצה.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 2</span>
+        <div><h4>ערוץ חזרה</h4><p>חסר / הוחלף, תשובות של אמא, מסך מעקב חי, מסך סיכום. → אין יותר צורך בשיחת טלפון.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 3</span>
+        <div><h4>התאמות</h4><p>גרירת סדר מחלקות, צילום מוצר, גודל טקסט, שיתוף בוואטסאפ, התראות פוש. → מוכן להתקנה אצלם.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 4</span>
+        <div><h4>הרצה</h4><p>התקנה פיזית על שני המכשירים, הדרכה, ליווי שבועיים, תיקונים. → הם משתמשים בזה לבד.</p></div>
+      </div>
+    </div>
+    <p class="pull">שלב 0 הוא הקריטי ביותר ולא נראה ככה. הקטלוג הזרוע הוא ההבדל בין <b>"אמא מקלידה 40 מוצרים מאפס ונוטשת"</b> לבין <b>"היא מקלידה שתי אותיות ובוחרת מרשימה"</b>. זו העבודה שקובעת אם המוצר ישרוד את השבוע הראשון.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">15</span><h2>סיכונים</h2></div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>סיכון</th><th>חומרה</th><th>מענה</th></tr></thead>
+        <tbody>
+          <tr><td>הרגל — דף ועט עובדים מצוין</td><td><span class="sev sev-hi">גבוה</span></td><td>קטלוג זרוע + שמירת מתכונים, כדי שמהשבוע השני זה יהיה מהיר מהדף</td></tr>
+          <tr><td>אמא לא תזין את המתכונים הראשונים</td><td><span class="sev sev-hi">גבוה</span></td><td>להזין איתה 5–6 מתכונים יחד בהתקנה. לא להשאיר אותה מול מסך ריק</td></tr>
+          <tr><td>אין קליטה בסופר</td><td><span class="sev sev-hi">גבוה</span></td><td>מצב לא־מקוון מהיום הראשון, לא כשיפור עתידי</td></tr>
+          <tr><td>פוש דורש התקנה למסך הבית</td><td><span class="sev sev-md">בינוני</span></td><td>חלק מטקס ההתקנה הפיזי. וואטסאפ כגיבוי</td></tr>
+          <tr><td>המסך של אבא נכבה באמצע</td><td><span class="sev sev-md">בינוני</span></td><td>Screen Wake Lock</td></tr>
+          <tr><td>הם "יאבדו" את האפליקציה</td><td><span class="sev sev-md">בינוני</span></td><td>אייקון גדול ומובחן, שם בעברית, במסך הבית הראשון ליד וואטסאפ</td></tr>
+          <tr><td>אייפון ישן מ־iOS 16.4</td><td><span class="sev sev-lo">נמוך</span></td><td>הכל עובד, רק בלי פוש. וואטסאפ מכסה</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-num">16</span><h2>שאלות פתוחות</h2></div>
+    <ol class="qs">
+      <li><b>באיזה סופר אבא קונה?</b><span>קובע את סדר המחלקות ההתחלתי, כדי שלא יצטרך לגרור כלום.</span></li>
+      <li><b>כמה מתכונים ברפרטואר הקבוע?</b><span>אם זה 15–20, אפשר להזין את כולם מראש בשלב 0 ולחסוך לאמא את ההזנה הראשונה לגמרי.</span></li>
+      <li><b>איזה דגם אייפון ואיזו גרסת iOS לכל אחד מהם?</b><span>קובע אם התראות פוש זמינות, או שנשענים על וואטסאפ.</span></li>
+      <li><b>תמונות מוצרים — קטלוג בלבד, או שאמא מצלמת?</b><span>משפיע על היקף העבודה בשלב 0.</span></li>
+      <li><b>יש עוד מישהו במשפחה שצריך גישה?</b><span>אח או אחות שקונים לפעמים משנים את מודל ההרשאות.</span></li>
+    </ol>
+  </section>
+
+  <hr class="end">
+  <p class="sign">השלמות · אפיון 0.1 · טיוטה לדיון</p>
+
+</div>
