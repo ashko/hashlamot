@@ -1,0 +1,86 @@
+/* השלמות — design tokens
+ *
+ * Every number here is a requirement from the spec, not a preference.
+ * Two people in their seventies read this in a supermarket aisle.
+ */
+
+:root {
+  /* --- type scale. Three global sizes; "large" is the default, not "normal". */
+  --fs-body: 23px;
+  --fs-name: 26px;
+  --fs-dept: 30px;
+  --fs-qty:  24px;
+  --fs-h1:   32px;
+  --fs-small: 17px;  /* the absolute floor — nothing smaller, anywhere */
+
+  /* --- touch. 68px minimum target, 96px rows, 12px between neighbours. */
+  --tap: 68px;
+  --row-h: 96px;
+  --gap-tap: 12px;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+
+  /* --- colour. Ballpoint on paper: what this replaces. */
+  --paper:   #FBFAF6;
+  --surface: #FFFFFF;
+  --ink:     #14203A;
+  --muted:   #4A5568;   /* 7.4:1 on white — still body-text legible */
+  --faint:   #6B7280;
+  --accent:  #1D4ED8;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E8EFFE;
+  --rule:    #DCD9D0;
+  --rule-soft: #EEECE6;
+
+  --bought:     #12683C;
+  --bought-bg:  #E4F3EA;
+  --missing:    #A82A20;
+  --missing-bg: #FBE7E5;
+  --swap:       #8A5100;
+  --swap-bg:    #FCF0DA;
+
+  --shadow: 0 1px 2px rgba(20, 32, 58, .06), 0 10px 28px -16px rgba(20, 32, 58, .22);
+
+  --font: "Assistant", "Heebo", -apple-system, BlinkMacSystemFont, "SF Hebrew",
+          "Arial Hebrew", "Segoe UI", "Noto Sans Hebrew", sans-serif;
+  --font-num: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+[data-scale="normal"] {
+  --fs-body: 20px; --fs-name: 23px; --fs-dept: 26px;
+  --fs-qty: 21px;  --fs-h1: 28px;   --fs-small: 17px;
+}
+[data-scale="large"] {
+  --fs-body: 23px; --fs-name: 26px; --fs-dept: 30px;
+  --fs-qty: 24px;  --fs-h1: 32px;   --fs-small: 17px;
+}
+[data-scale="xlarge"] {
+  --fs-body: 27px; --fs-name: 31px; --fs-dept: 35px;
+  --fs-qty: 28px;  --fs-h1: 38px;   --fs-small: 19px;
+  --row-h: 108px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:   #0E1521;
+    --surface: #18202E;
+    --ink:     #F0F3F8;
+    --muted:   #B4BDCC;
+    --faint:   #8A94A6;
+    --accent:  #8FB0FA;
+    --accent-ink: #0E1521;
+    --accent-soft: #1C2942;
+    --rule:    #2E3A4D;
+    --rule-soft: #232D3D;
+
+    --bought:     #6FD3A0;
+    --bought-bg:  #12321F;
+    --missing:    #FF9B90;
+    --missing-bg: #3A1A1B;
+    --swap:       #EDB25C;
+    --swap-bg:    #362810;
+
+    --shadow: none;
+  }
+}

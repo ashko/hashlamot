@@ -1,0 +1,42 @@
+name: Keep Supabase awake
+
+# A free Supabase project pauses after a week with no activity. This app is used
+# once a week — right on the line — so a holiday or a trip would push it over,
+# and it would be dead at the exact moment they reached for it. A daily ping
+# removes the failure mode entirely. Actions minutes are unlimited on a public
+# repo, so this costs nothing.
+
+on:
+  schedule:
+    - cron: '17 6 * * *'   # 06:17 UTC daily, off the hour to dodge the stampede
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Touch the database
+        env:
+          URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::error::VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY are not set."
+            exit 1
+          fi
+
+          # A real read against a real table. Hitting the health endpoint would
+          # not count as database activity.
+          code=$(curl -sS -o /tmp/out.txt -w '%{http_code}' \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
+            "$URL/rest/v1/departments?select=key&limit=1")
+
+          echo "HTTP $code"
+          cat /tmp/out.txt
+
+          # 401/403 still proves the project is awake and answering.
+          case "$code" in
+            2*|401|403) echo "project is awake" ;;
+            *) echo "::error::unexpected response $code"; exit 1 ;;
+          esac

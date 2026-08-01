@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages needs these; the default GITHUB_TOKEN permissions are read-only.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A deploy already in flight should finish rather than be cancelled halfway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          # Public values, not secrets — the anon key is designed to ship in
+          # the bundle and everything behind it is protected by RLS. Repo
+          # *variables* are the honest home for them; secrets also work.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build
+
+      - name: Fail if Supabase config is missing
+        run: |
+          if grep -rq "VITE_SUPABASE_URL" dist/assets/*.js 2>/dev/null; then
+            echo "::error::Supabase env vars were not substituted at build time."
+            echo "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY as repository variables."
+            exit 1
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
