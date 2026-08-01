@@ -5,3 +5,8 @@ dist-ssr/
 .env.local
 .DS_Store
 *.local
+
+dist-demo/
+.demo-build/
+dist-noenv/
+dist-env/

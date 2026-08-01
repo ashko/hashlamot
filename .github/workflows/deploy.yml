@@ -29,6 +29,23 @@ jobs:
 
       - run: npm ci
 
+      # Checked before the build, not after. Vite substitutes these at compile
+      # time, so once the bundle exists there is nothing left to grep for —
+      # a missing value silently becomes `undefined` and every visitor gets the
+      # "not configured" screen.
+      - name: Check Supabase config is present
+        env:
+          URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          missing=0
+          [ -z "$URL" ] && { echo "::error::VITE_SUPABASE_URL is not set"; missing=1; }
+          [ -z "$KEY" ] && { echo "::error::VITE_SUPABASE_ANON_KEY is not set"; missing=1; }
+          if [ "$missing" = 1 ]; then
+            echo "Set them under Settings → Secrets and variables → Actions → Variables."
+            exit 1
+          fi
+
       - name: Build
         env:
           # Public values, not secrets — the anon key is designed to ship in
@@ -38,14 +55,6 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
           BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build
-
-      - name: Fail if Supabase config is missing
-        run: |
-          if grep -rq "VITE_SUPABASE_URL" dist/assets/*.js 2>/dev/null; then
-            echo "::error::Supabase env vars were not substituted at build time."
-            echo "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY as repository variables."
-            exit 1
-          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
