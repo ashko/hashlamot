@@ -351,6 +351,37 @@
     color: var(--muted); background: var(--surface);
   }
 
+  /* quick-add */
+  .qa { padding: 0 .85rem .5rem; }
+  .qa-field {
+    border: 2px solid var(--accent); border-radius: 11px;
+    padding: .6rem .75rem; font-size: 1.05rem; font-weight: 600;
+    background: var(--surface); display: flex; align-items: center;
+  }
+  .caret {
+    display: inline-block; width: 2px; height: 1.15rem;
+    background: var(--accent); margin-inline-start: 2px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+  .qa-hint { font-size: .72rem; color: var(--faint); margin-top: .3rem; padding-inline-start: .2rem; }
+
+  .sug { border-block: 1px solid var(--rule-soft); background: var(--paper); }
+  .srow {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .55rem .95rem; border-bottom: 1px solid var(--rule-soft);
+  }
+  .srow:last-child { border-bottom: none; }
+  .sic { font-size: 1.15rem; width: 1.5rem; text-align: center; flex: none; }
+  .snm { font-size: .96rem; font-weight: 600; }
+  .sun {
+    margin-inline-start: auto; font-family: var(--f-data); font-size: .72rem;
+    color: var(--muted); background: var(--rule-soft);
+    padding: .15rem .45rem; border-radius: 5px; white-space: nowrap;
+  }
+  .srow.new .sic, .srow.new .snm { color: var(--accent); }
+
   .prog { padding: .5rem .95rem .3rem; }
   .prog-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .35rem; }
   .prog-top .big { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -457,12 +488,12 @@
 <div class="doc" dir="rtl" lang="he">
 
   <header class="mast">
-    <p class="kicker">אפיון מוצר · טיוטה 0.2</p>
+    <p class="kicker">אפיון מוצר · טיוטה 0.3</p>
     <h1>השלמות</h1>
     <p class="lede">אמא מתכננת את הבישולים. אבא קונה. שניהם רואים את אותו הדבר, בזמן אמת.</p>
     <div class="meta">
       <span><b>תשתית:</b> GitHub ‏+ Supabase</span>
-      <span><b>משתמשים:</b> 2 + מנהל</span>
+      <span><b>עלות:</b> אפס</span>
       <span><b>הפצה:</b> PWA, ללא חנות אפליקציות</span>
       <span><b>סופר:</b> חצי חינם</span>
     </div>
@@ -516,6 +547,39 @@
   <section>
     <div class="sec-head"><span class="sec-num">04</span><h2>המסע — יום רביעי</h2></div>
     <p>זה לב האפיון. כל שאר המסמך משרת את הרצף הזה.</p>
+
+    <h3>אין שלב הקמה</h3>
+    <p>אין רשימת מתכונים מוכנה, ואמא תזין הכל בעצמה. זה משנה את המוצר מהיסוד: <strong>אף פעם לא מבקשים ממנה לשבת ולהזין 20 מתכונים.</strong> היא לא תעשה את זה, ובצדק.</p>
+    <p class="pull">במקום זה, <b>ספריית המתכונים נצברת כתוצר לוואי של שימוש רגיל.</b> כל שבוע היא מזינה רק את המנות של אותו שבוע.</p>
+    <div class="tw">
+      <table>
+        <thead><tr><th></th><th>מה היא עושה</th><th>כמה זמן</th></tr></thead>
+        <tbody>
+          <tr><td><strong>שבוע 1</strong></td><td>מזינה 4 מנות חדשות עם המרכיבים</td><td class="num">~7 דקות</td></tr>
+          <tr><td><strong>שבוע 2</strong></td><td>מקישה על 2 קיימות, מזינה 2 חדשות</td><td class="num">~4 דקות</td></tr>
+          <tr><td><strong>שבוע 3</strong></td><td>מקישה על 3 קיימות, מזינה 1 חדשה</td><td class="num">~2 דקות</td></tr>
+          <tr><td><strong>שבוע 5 ואילך</strong></td><td>מקישה בלבד</td><td class="num yes">~40 שניות</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>הכתיבה על דף לוקחת לה כ־20 דקות <strong>בכל שבוע</strong>. נקודת האיזון היא כבר בשבוע הראשון, והפער נפתח משם.</p>
+    <p class="pull"><b>המסקנה התכנונית:</b> כל מאמץ העיצוב עובר למסך אחד — הזנת מרכיב. אם הקשה על מרכיב לוקחת 3 שניות, שבוע 1 עובר בנעימות. אם היא לוקחת 15, אין שבוע 2.</p>
+
+    <h3>הזנת מרכיב — המסך הקריטי</h3>
+    <ul>
+      <li><strong>שדה אחד שנשאר פעיל.</strong> מקלידה, בוחרת, השדה מתנקה ומוכן לבא. בלי מעבר בין מצבים, בלי "שמור" אחרי כל פריט.</li>
+      <li><strong>שתי אותיות מספיקות.</strong> "עג" מציג עגבניות, עגבניות שרי, עגבניות מרוסקות — כל אחת עם אייקון. הקשה אחת.</li>
+      <li><strong>הכמות כבר שם.</strong> לכל מוצר בקטלוג יחידת ברירת מחדל, מוצעת מראש: "עגבניות ← 1 ק״ג". היא משנה רק אם צריך.</li>
+      <li><strong>הכתבה קולית עובדת.</strong> שדה טקסט רגיל, כך שהיא יכולה להגיד "פטרוזיליה" במקום להקליד. לגיל הזה זה לרוב מהיר יותר מהמקלדת.</li>
+      <li><strong>הצעות לפני שהקלידה.</strong> המוצרים שהיא הכי משתמשת בהם, מוכנים להקשה. בשבוע הראשון אלה הנפוצים בקטלוג; אחר כך אלה שלה.</li>
+      <li><strong>מוצר שלא קיים</strong> — השורה האחרונה תמיד "צור חדש: …", ואחריה רשת של 15 אריחי מחלקה. הקשה, הקשה, וחזרה לשדה.</li>
+    </ul>
+
+    <h3>רשימה מהירה — בלי מתכון בכלל</h3>
+    <p>לדף ולעט יש יתרון אחד שאסור לוותר עליו: <strong>הם לא מכריחים מבנה.</strong> יש שבועות שבהם אמא סתם רוצה לשלוח רשימה, בלי לארגן אותה למנות.</p>
+    <p>לכן "רשימה מהירה" היא מסלול שווה־ערך, לא פינה נידחת: אותו שדה הזנה, ישר לרשימה. אם האפליקציה תדרוש להגדיר מנה כדי לקנות חלב, היא גרועה מדף.</p>
+
+    <h3>ומשבוע 5 — המסע הקצר</h3>
 
     <div class="journey">
       <div class="beat">
@@ -588,6 +652,44 @@
             </div>
           </div>
           <div class="ph-foot"><div class="btn">הכנת רשימה</div></div>
+        </div>
+      </figure>
+
+      <figure class="shot">
+        <figcaption><b>אמא</b> · הזנת מרכיבים — <span style="color:var(--accent)">המסך הקריטי</span></figcaption>
+        <div class="phone">
+          <div class="ph-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="ph-body">
+            <div class="ph-h1">שניצל</div>
+            <div class="ph-sub">3 מרכיבים · שבוע 1</div>
+            <div class="qa">
+              <div class="qa-field">עג<span class="caret"></span></div>
+              <div class="qa-hint">אפשר גם להכתיב 🎤</div>
+            </div>
+            <div class="sug">
+              <div class="srow"><span class="sic">🍅</span><span class="snm">עגבניות</span><span class="sun">1 ק״ג</span></div>
+              <div class="srow"><span class="sic">🍅</span><span class="snm">עגבניות שרי</span><span class="sun">קופסה</span></div>
+              <div class="srow"><span class="sic">🥫</span><span class="snm">עגבניות מרוסקות</span><span class="sun">קופסה</span></div>
+              <div class="srow new"><span class="sic">＋</span><span class="snm">צור חדש: "עג"</span></div>
+            </div>
+            <div class="dept">כבר ברשימה <span class="n">3</span></div>
+            <div class="row">
+              <div class="thumb">🍗</div>
+              <div><div class="nm">חזה עוף</div></div>
+              <div class="qty">2 ק״ג</div>
+            </div>
+            <div class="row">
+              <div class="thumb">🥚</div>
+              <div><div class="nm">ביצים</div></div>
+              <div class="qty">תבנית</div>
+            </div>
+            <div class="row">
+              <div class="thumb">🌾</div>
+              <div><div class="nm">פירורי לחם</div></div>
+              <div class="qty">חבילה</div>
+            </div>
+          </div>
+          <div class="ph-foot"><div class="btn">שמירת המנה</div></div>
         </div>
       </figure>
 
@@ -768,9 +870,32 @@
       <li><span class="i">14</span> 🧴 טואלטיקה ופארם</li>
       <li><span class="i">15</span> 📦 שונות</li>
     </ul>
-    <p class="pull">הסדר הזה הוא <b>הנחה מושכלת, לא ידיעה.</b> סניפי חצי חינם שונים זה מזה. שאלה אחת לאבא — "מה אתה עובר קודם, הגבינות או העוף?" — או גרירה אחת במסך ההגדרות, ונסגר.</p>
-    <h3>התאמה לסופר של אבא</h3>
-    <p>מסך אחד בהגדרות: אותה רשימה עם ידית גרירה. אבא גורר פעם אחת כדי להתאים לסניף שלו, והסדר תקף לכל הרשימות מכאן והלאה. מחלקה בלי פריטים ברשימה הנוכחית פשוט לא מוצגת.</p>
+    <p class="pull">הסדר הזה הוא <b>ניחוש מושכל.</b> אף אחד מאיתנו לא יודע את המסלול של אבא, וסניפי חצי חינם שונים זה מזה. לכן הסדר לא נקבע מראש — <b>הוא נלמד.</b></p>
+
+    <h3>איך הסדר מתקן את עצמו</h3>
+    <div class="phases">
+      <div class="phase">
+        <span class="st">שכבה 1</span>
+        <div><h4>ברירת מחדל סבירה</h4><p>הרשימה שלמעלה. גם אם היא לא מדויקת, היא מקובצת נכון — כל הירקות יחד, כל החלב יחד. זה כבר טוב בהרבה מרשימה לפי מתכון.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שכבה 2</span>
+        <div><h4>תיקון במקום שבו הטעות מורגשת</h4><p>לא במסך הגדרות שאבא לעולם לא יפתח. הקשה על כותרת מחלקה <strong>בתוך מסך הקנייה</strong> נותנת "להעביר למעלה / למטה". הוא עומד במעבר, רואה שהקפואים אמורים היו לבוא קודם, מקיש פעמיים, וזה נשמר לתמיד.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שכבה 3</span>
+        <div><h4>למידה מהתנהגות</h4><p>לכל פריט שנקנה יש חותמת זמן, ולכן אנחנו יודעים באיזה סדר אבא באמת עבר. אחרי <strong>שלוש קניות מלאות</strong>, אם הסדר בפועל שונה מהמוגדר, מוצג לו כרטיס אחד עם תצוגה מקדימה.</p></div>
+      </div>
+    </div>
+    <div class="alert" style="margin:1.5rem 0;max-width:32rem;background:var(--accent-soft);border-color:var(--accent);">
+      <div class="t" style="color:var(--accent);">שמתי לב שאתה עובר בקפואים לפני מוצרי הניקיון. לסדר ככה מעכשיו?</div>
+      <div class="opts" style="grid-template-columns:1fr 1fr;display:grid;">
+        <div class="opt">כן</div><div class="opt">לא, תשאיר</div>
+      </div>
+    </div>
+    <p><strong>אף פעם לא בשקט.</strong> סדר שמשתנה מעצמו בלי הסכמה הוא בדיוק סוג ההפתעה שמאבדת אמון בגיל הזה.</p>
+    <p class="pull">השכבה השלישית היא התשובה האמיתית ל"אני לא יודע את המסלול של אבא": <b>אנחנו לא צריכים לדעת.</b> שלוש קניות והמערכת יודעת, בלי שאף אחד הגדיר כלום.</p>
+    <p class="note">מחלקה בלי פריטים ברשימה הנוכחית פשוט לא מוצגת.</p>
     <h3>איך מוצר מקבל מחלקה</h3>
     <ul>
       <li><strong>קטלוג זרוע</strong> (~250 מוצרים נפוצים) מגיע עם מחלקה משויכת מראש. מכסה את הרוב המוחלט.</li>
@@ -861,25 +986,36 @@
     <p>היקף העבודה מוגבל ומוגדר היטב, כי מה שצריך לעבוד אופליין הוא צר: אבא משנה סטטוס של שורות ברשימה אחת. אמא בבית על רשת יציבה. זה לא סנכרון דו־כיווני כללי — זה תור של עדכוני סטטוס אידמפוטנטיים. הפירוט בסעיף 12.</p>
     <p><strong>בתמורה</strong>, Postgres נותן משהו ש־Firestore לא: מיזוג המרכיבים הופך משאילתה בצד הלקוח לשאילתת SQL אחת, במקום אחד, שאפשר לבדוק בלי להריץ את האפליקציה.</p>
 
-    <h3>שתי הערות תפעוליות</h3>
+    <h3>עלות — אפס, ובכוונה</h3>
+    <p>הריפו ציבורי, וכל רכיב נשאר בתוך מסגרת חינמית עם מרווח עצום:</p>
     <div class="tw">
       <table>
-        <thead><tr><th>נושא</th><th>המצב</th><th>המענה</th></tr></thead>
+        <thead><tr><th>רכיב</th><th>מסגרת חינמית</th><th>הצריכה בפועל</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>ריפו פרטי</strong></td>
-            <td>GitHub Pages בריפו פרטי דורש מנוי בתשלום</td>
-            <td>ריפו ציבורי. המפתח היחיד בקוד הוא ה־<span class="num">anon key</span> של Supabase, שנועד להיות פומבי ומוגן ב־RLS</td>
-          </tr>
-          <tr>
-            <td><strong>השהיית הפרויקט</strong></td>
-            <td class="no">פרויקט Supabase חינמי נכנס להשהיה אחרי שבוע ללא פעילות — והשימוש כאן שבועי, בדיוק על הגבול</td>
-            <td><span class="num">GitHub Actions</span> עם <span class="num">schedule</span> יומי ששולח בקשה קלה. עולה כלום, בתוך החשבונות הקיימים. חלק משלב 0</td>
-          </tr>
+          <tr><td>GitHub — ריפו ציבורי</td><td>ללא הגבלה</td><td>—</td></tr>
+          <tr><td>GitHub Actions</td><td class="yes">דקות ללא הגבלה בריפו ציבורי</td><td>פריסה + פינג יומי</td></tr>
+          <tr><td>GitHub Pages</td><td>חינם בריפו ציבורי</td><td>אתר סטטי, מגה־בייטים בודדים</td></tr>
+          <tr><td>Supabase — בסיס נתונים</td><td class="num">500MB</td><td class="num">&lt;10MB אחרי שנה</td></tr>
+          <tr><td>Supabase — אחסון</td><td class="num">1GB</td><td class="num">~30MB</td></tr>
+          <tr><td>Supabase — תעבורה</td><td class="num">5GB / חודש</td><td class="num">עשרות MB</td></tr>
+          <tr><td>Supabase — Realtime</td><td class="num">200 חיבורים</td><td class="num">2</td></tr>
+          <tr><td>Supabase — Edge Functions</td><td class="num">500K / חודש</td><td class="num">~50</td></tr>
+          <tr><td>Web Push</td><td>תקן, ללא שירות</td><td>—</td></tr>
         </tbody>
       </table>
     </div>
-    <p>הסיכון השני הוא האמיתי מבין השניים: חופשה או חג ידחפו אותם מעבר לשבוע, והאפליקציה תישבר בדיוק כשינסו להשתמש בה.</p>
+    <p>הכתובת היא <span class="num">ashko.github.io/hashlamot</span> — חינם. דומיין משלו היה עולה כסף, ולכן אין. <span class="note">(הערה טכנית: כתובת בתת־נתיב מחייבת <span class="num">base</span> ב־Vite ו־<span class="num">scope</span>/<span class="num">start_url</span> תואמים ב־manifest, אחרת ה־Service Worker לא נרשם.)</span></p>
+    <p class="pull"><b>הסיכון היחיד שכן עולה כסף אם מתעלמים ממנו:</b> פרויקט Supabase חינמי נכנס להשהיה אחרי שבוע ללא פעילות. השימוש כאן שבועי — בדיוק על הגבול, וחופשה או חג ידחפו אותו מעבר. המענה: <span class="num">schedule</span> יומי ב־GitHub Actions. דקות בריפו ציבורי הן ללא הגבלה, כך שזה באמת אפס.</p>
+
+    <h3>ריפו ציבורי — ומה זה אומר על הנתונים</h3>
+    <p>הקוד גלוי, הנתונים לא. אבל ריפו ציבורי מחייב הידוק אחד:</p>
+    <ul>
+      <li>ה־<span class="num">anon key</span> נמצא בקוד ונועד להיות פומבי. הוא לא נותן גישה לכלום בלי לעבור RLS.</li>
+      <li><strong>קוד הצירוף הוא הנקודה הרגישה היחידה.</strong> אם הוא 6 ספרות קבועות ותמיד פעיל, מישהו שמצא את הריפו יכול לנסות לנחש.</li>
+      <li>לכן: <strong>צירוף מכשיר כבוי כברירת מחדל.</strong> אתה מפעיל אותו לחלון של 10 דקות כשאתה מקים מכשיר, הקוד חד־פעמי ובן 8 תווים, ואחרי ששני המכשירים מחוברים הצירוף נשאר כבוי לתמיד.</li>
+      <li>התוצאה: גם עם המפתח הפומבי בקוד, אין דלת פתוחה.</li>
+    </ul>
+    <p class="note">הנתונים היחידים שנשמרים ממילא: שמות מוצרים, מתכונים, ותמונות שהם צילמו. אין מידע אישי מזהה מעבר ל"אמא"/"אבא".</p>
 
     <h3>הרשאות</h3>
     <p>כדי להימנע מתת־שאילתה בכל בדיקה, <span class="num">household_id</span> נדחף לתוך ה־JWT דרך Custom Access Token Hook, והמדיניות הופכת להשוואה אחת:</p>
@@ -896,13 +1032,16 @@
       <li><strong>גיבוי בוואטסאפ:</strong> כפתור שמייצר טקסט נקי של הרשימה לפי מחלקות. גם ההתראה הכי אמינה נכשלת לפעמים, וזה ערוץ שהם כבר בתוכו יום־יום.</li>
     </ul>
 
-    <h3>תמונות מוצרים — קטלוג וגם צילום</h3>
+    <h3>תמונות מוצרים — חלוקת עבודה שמייתרת עלות</h3>
+    <p><strong>הקטלוג הזרוע נושא אייקון, לא צילום.</strong> ~250 מוצרים ישראליים נפוצים, כל אחד עם אייקון מחלקה ושם. לאסוף 250 תצלומי מוצר זו עבודה אמיתית עם שאלות רישוי, ותועלת שולית — עבור "עגבניות", אייקון ושם ב־26px הם זיהוי מיידי.</p>
+    <p><strong>הצילום נכנס בדיוק במקום שבו הוא כן משנה</strong> — כשהגרסה היא זו שקובעת: "איזו שמנת?", "איזה קמח?".</p>
     <ul>
-      <li><strong>קטלוג זרוע</strong> — ~250 מוצרים ישראליים נפוצים עם תמונה ומחלקה, מוכנים מראש ב־Supabase Storage. מכסה את הרוב המוחלט.</li>
-      <li><strong>צילום</strong> — <span class="num">&lt;input type="file" accept="image/*" capture&gt;</span> פותח את המצלמה ישירות מהאפליקציה.</li>
+      <li>אמא מצלמת פעם אחת את המוצרים שבהם המותג קריטי. התמונה נשמרת על המוצר וחוזרת בכל רשימה עתידית.</li>
+      <li>אבא מצלם ב"החלפתי" — אמא רואה בדיוק מה נכנס לעגלה.</li>
+      <li><span class="num">&lt;input type="file" accept="image/*" capture&gt;</span> פותח את המצלמה ישירות.</li>
       <li>התמונה <strong>מוקטנת ל־800px ונדחסת בדפדפן לפני ההעלאה</strong>. תמונת 12 מגה־פיקסל דרך רשת סלולרית בסופר לא תעלה, ואבא יחשוב שהאפליקציה תקועה.</li>
-      <li>הצילום זמין גם לאבא: "החלפתי" מאפשר לצלם את מה שהוא כן לקח, ואמא רואה בדיוק מה נכנס לעגלה.</li>
     </ul>
+    <p>התוצאה: הקטלוג שמיש מהיום הראשון בלי עלות, והתמונות מצטברות בדיוק במקומות ששוות בהם משהו.</p>
   </section>
 
   <section>
@@ -987,32 +1126,35 @@
     <div class="phases">
       <div class="phase">
         <span class="st">שלב 0</span>
-        <div><h4>תשתית ותוכן</h4><p>פרויקט Supabase, סכימה, RLS, כניסה בקוד. GitHub Actions לפריסה ל־Pages <strong>ולשמירת הפרויקט ער</strong>. קטלוג זרוע ~250 מוצרים. <strong>הזנת 20 המתכונים של אמא מראש.</strong> → האפליקציה נפתחת בטלפון עם כל התוכן שלה כבר בפנים.</p></div>
+        <div><h4>תשתית</h4><p>פרויקט Supabase, סכימה, RLS, צירוף מכשיר מוגן. GitHub Actions לפריסה ל־Pages <strong>ולשמירת הפרויקט ער</strong>. קטלוג זרוע ~250 מוצרים עם אייקון, מחלקה ויחידת ברירת מחדל.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 1</span>
-        <div><h4>הליבה</h4><p>בחירת מנות, <span class="num">build_list</span>, מסך אבא, סימון "נקנה", Realtime. → המסלול המלא עובד מקצה לקצה.</p></div>
+        <div><h4>ההזנה</h4><p><strong>שדה הזנת המרכיב</strong> — השלמה אוטומטית, יחידת ברירת מחדל, יצירת מוצר חדש, הכתבה. מתכונים, ורשימה מהירה. → אמא מזינה מנה מלאה בפחות משתי דקות.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 2</span>
-        <div><h4>אופליין</h4><p>מטמון IndexedDB, תור יוצא, <span class="num">apply_item_update</span>, מטמון תמונות, שורת מצב. → עובד במרתף של חצי חינם.</p></div>
+        <div><h4>הליבה</h4><p>בחירת מנות, <span class="num">build_list</span>, מסך אבא, סימון "נקנה", Realtime. → המסלול המלא עובד מקצה לקצה.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 3</span>
-        <div><h4>ערוץ חזרה</h4><p>חסר / הוחלף + צילום, תשובות של אמא, מעקב חי, סיכום. → אין יותר צורך בשיחת טלפון.</p></div>
+        <div><h4>אופליין</h4><p>מטמון IndexedDB, תור יוצא, <span class="num">apply_item_update</span>, מטמון נכסים, שורת מצב. → עובד במרתף של חצי חינם.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 4</span>
-        <div><h4>התאמות</h4><p>גרירת סדר מחלקות, גודל טקסט, פוש, שיתוף בוואטסאפ. → מוכן להתקנה אצלם.</p></div>
+        <div><h4>ערוץ חזרה</h4><p>חסר / הוחלף + צילום, תשובות של אמא, מעקב חי, סיכום. → אין יותר צורך בשיחת טלפון.</p></div>
       </div>
       <div class="phase">
         <span class="st">שלב 5</span>
-        <div><h4>הרצה</h4><p>התקנה פיזית על שני המכשירים, הדרכה, ליווי שבועיים. → הם משתמשים בזה לבד.</p></div>
+        <div><h4>התאמות</h4><p>סדר מחלקות: תיקון מתוך מסך הקנייה + הצעה נלמדת. גודל טקסט, פוש, שיתוף בוואטסאפ. → מוכן להתקנה אצלם.</p></div>
+      </div>
+      <div class="phase">
+        <span class="st">שלב 6</span>
+        <div><h4>הרצה</h4><p>התקנה פיזית על שני המכשירים, <strong>בניית הרשימה הראשונה יחד עם אמא</strong>, ליווי שבועיים. → הם משתמשים בזה לבד.</p></div>
       </div>
     </div>
-    <p class="pull">20 המתכונים משנים את שלב 0. במקום שאמא תעמוד מול מסך ריק ותקליד את המתכון הראשון שלה, <b>אני מזין את כל ה־20 מראש</b>. בשימוש הראשון היא פותחת ורואה את כל הרפרטואר שלה עם תמונות, ורק מקישה על ארבעה. הסיכון הגדול ביותר במוצר — שהיא לא תעבור את ההזנה הראשונה — נמחק לגמרי.</p>
-    <p>בשביל זה אני צריך את הרשימה: 20 שמות המנות, והמרכיבים והכמויות של כל אחת. שיחה אחת איתה, או דף שהיא תמלא.</p>
-    <p><strong>האופליין עלה לשלב נפרד ומוקדם.</strong> ב־Firestore הוא היה נלווה; כאן הוא רכיב, והוא קודם לערוץ החזרה — כי בלעדיו כל השאר לא שווה כלום בתוך הסופר.</p>
+    <p class="pull">העדר רשימת המתכונים העלה את <b>שלב ההזנה להיות הראשון אחרי התשתית</b>, לפני הליבה. זה נראה הפוך — למה לבנות את שדה ההזנה לפני מסך הקנייה? כי אם ההזנה איטית, אמא לא תגיע לשבוע השני, ואז מסך הקנייה של אבא לא רלוונטי. השדה הזה הוא נקודת הכשל היחידה של המוצר.</p>
+    <p><strong>שלב 6 כולל ישיבה איתה על הרשימה הראשונה.</strong> לא הדרכה — בנייה משותפת. אתה מקליד את הראשונה, היא את השנייה, והיא מסיימת את השלישית לבד. זה לא פיצ׳ר בקוד, אבל זה המענה האמיתי לסיכון הגדול ביותר.</p>
   </section>
 
   <section>
@@ -1021,11 +1163,13 @@
       <table>
         <thead><tr><th>סיכון</th><th>חומרה</th><th>מענה</th></tr></thead>
         <tbody>
-          <tr><td><strong>פרויקט Supabase נכנס להשהיה אחרי שבוע</strong></td><td><span class="sev sev-hi">גבוה</span></td><td>Cron יומי ב־GitHub Actions ששומר אותו ער. חלק משלב 0</td></tr>
-          <tr><td>הרגל — דף ועט עובדים מצוין</td><td><span class="sev sev-hi">גבוה</span></td><td>20 המתכונים מוזנים מראש; כבר מהשבוע הראשון זה מהיר מהדף</td></tr>
-          <tr><td>אין קליטה בסופר, ואין אופליין מובנה</td><td><span class="sev sev-hi">גבוה</span></td><td>שלב 2 ייעודי — תור יוצא + מטמון תמונות</td></tr>
-          <tr><td>סדר המחלקות בחצי חינם לא מדויק</td><td><span class="sev sev-md">בינוני</span></td><td>שאלה אחת לאבא, או גרירה אחת במסך ההגדרות</td></tr>
-          <tr><td>Pages דורש ריפו ציבורי בחשבון חינמי</td><td><span class="sev sev-md">בינוני</span></td><td>הריפו ציבורי; ה־<span class="num">anon key</span> נועד להיות פומבי ו־RLS מגן על הנתונים</td></tr>
+          <tr><td><strong>אמא לא תשרוד את ההזנה של שבוע 1</strong></td><td><span class="sev sev-hi">הגבוה ביותר</span></td><td>שלב ההזנה קודם לכל השאר. השלמה משתי אותיות, יחידה מוצעת, הכתבה קולית, שדה שנשאר פעיל. ובנייה משותפת של הרשימה הראשונה</td></tr>
+          <tr><td><strong>פרויקט Supabase נכנס להשהיה אחרי שבוע</strong></td><td><span class="sev sev-hi">גבוה</span></td><td>Cron יומי ב־GitHub Actions. דקות בריפו ציבורי הן ללא הגבלה</td></tr>
+          <tr><td>אין קליטה בסופר, ואין אופליין מובנה</td><td><span class="sev sev-hi">גבוה</span></td><td>שלב 3 ייעודי — תור יוצא + מטמון נכסים</td></tr>
+          <tr><td>הרגל — דף ועט עובדים מצוין</td><td><span class="sev sev-hi">גבוה</span></td><td>הספרייה נצברת מעצמה; משבוע 2 מהיר מהדף, ומשבוע 5 לא באותה ליגה</td></tr>
+          <tr><td>האפליקציה תכריח מבנה שדף לא מכריח</td><td><span class="sev sev-md">בינוני</span></td><td>"רשימה מהירה" כמסלול שווה־ערך, בלי לשייך למתכון</td></tr>
+          <tr><td>סדר המחלקות לא מדויק ואיש לא יודע אותו</td><td><span class="sev sev-md">בינוני</span></td><td>תיקון בהקשה מתוך מסך הקנייה, והצעה נלמדת אחרי 3 קניות</td></tr>
+          <tr><td>קוד צירוף בריפו ציבורי</td><td><span class="sev sev-md">בינוני</span></td><td>צירוף כבוי כברירת מחדל, חלון 10 דקות, קוד חד־פעמי בן 8 תווים</td></tr>
           <tr><td>פוש דורש התקנה למסך הבית</td><td><span class="sev sev-md">בינוני</span></td><td>חלק מטקס ההתקנה הפיזי. וואטסאפ כגיבוי</td></tr>
           <tr><td>המסך של אבא נכבה באמצע</td><td><span class="sev sev-md">בינוני</span></td><td>Screen Wake Lock</td></tr>
           <tr><td>הם "יאבדו" את האפליקציה</td><td><span class="sev sev-md">בינוני</span></td><td>אייקון גדול ומובחן, שם בעברית, במסך הבית הראשון ליד וואטסאפ</td></tr>
@@ -1036,16 +1180,15 @@
 
   <section>
     <div class="sec-head"><span class="sec-num">16</span><h2>שאלות פתוחות</h2></div>
+    <p><strong>אין חסמים לתחילת העבודה.</strong> שתי שאלות שאפשר לענות עליהן תוך כדי:</p>
     <ol class="qs">
-      <li><b>20 המתכונים של אמא — שמות, מרכיבים וכמויות.</b><span>זה החסם היחיד לשלב 0. שיחה אחת איתה, או דף שהיא תמלא.</span></li>
-      <li><b>מה אבא עובר קודם בחצי חינם — דלפק הגבינות או הקצבייה?</b><span>שאלה אחת סוגרת את סדר המחלקות ומייתרת את הגרירה.</span></li>
-      <li><b>ריפו ציבורי, או GitHub Pro?</b><span>משפיע רק על נראות הקוד, לא על אבטחת הנתונים — אלה מוגנים ב־RLS בכל מקרה.</span></li>
       <li><b>יש עוד מישהו במשפחה שצריך גישה?</b><span>אח או אחות שקונים לפעמים משנים את מודל ההרשאות.</span></li>
+      <li><b>כמה מנות בשבוע טיפוסי?</b><span>האפיון מניח 4–5. אם זה בדרך כלל 8, שווה לחשוב על קיבוץ המתכונים לפי סוג.</span></li>
     </ol>
-    <p class="note" style="margin-top:1.5rem;">נסגר בסבב הזה: הסופר הוא חצי חינם · ~20 מתכונים · שניהם על iOS עדכני, כך שפוש זמין · תמונות מקטלוג <em>וגם</em> מצילום.</p>
+    <p class="note" style="margin-top:1.5rem;">נסגר בסבבים הקודמים: חצי חינם · שניהם על iOS עדכני, כך שפוש זמין · תמונות מקטלוג וגם מצילום · ריפו ציבורי, עלות אפס · אין רשימת מתכונים מוכנה, ולכן הספרייה נצברת מעצמה · המסלול של אבא לא ידוע, ולכן הוא נלמד.</p>
   </section>
 
   <hr class="end">
-  <p class="sign">השלמות · אפיון 0.2 · GitHub ‏+ Supabase · טיוטה לדיון</p>
+  <p class="sign">השלמות · אפיון 0.3 · GitHub ‏+ Supabase · עלות אפס · טיוטה לדיון</p>
 
 </div>
