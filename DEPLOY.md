@@ -136,8 +136,9 @@ select
 
 | מה קרה | מה לעשות |
 |---|---|
+| **`build` ירוק ✓ אבל `deploy` אדום ✗, ונכשל תוך שניות ספורות בלי להציג אף שלב** | Pages לא הופעל — שלב 5ב. **Settings → Pages → Source: GitHub Actions**, ואז Actions → Deploy → **Re-run all jobs**. זו התקלה הכי שכיחה כאן, והיא נראית מבהילה כי אין לוג להסתכל בו |
 | ה־Deploy נכשל עם `VITE_SUPABASE_URL is not set` | חזור ל־5א. הבדיקה הזאת רצה **לפני** הבנייה בכוונה, כדי שלא תגלה את הבעיה רק כשההורים פותחים מסך שגיאה. אחרי שתתקן: Actions → Deploy → **Re-run all jobs** |
-| ה־Deploy נכשל עם משהו על `Pages` | שלב 5ב לא בוצע. **Settings → Pages → Source: GitHub Actions** |
+| ה־keepalive נכשל, אבל ה־Deploy עובד | כנראה ריצה ישנה מלפני שהגדרת את המשתנים. Actions → Keep Supabase awake → **Run workflow** כדי לוודא שהוא ירוק עכשיו |
 | אין בכלל לשונית Actions | הריפו פרטי בתוכנית חינמית. **Settings → General → למטה → Change repository visibility → Public** |
 | הכפתור **Run workflow** לא מופיע | 6ב לא הושלם — `main` חייב להיות הענף הראשי כדי שהכפתור יופיע |
 
