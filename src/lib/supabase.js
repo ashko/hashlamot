@@ -3,8 +3,24 @@ import { createClient } from '@supabase/supabase-js'
 // The anon key is meant to be public and ships in the bundle. Every table it
 // can reach is behind row level security, and device pairing is closed unless
 // the admin has deliberately opened a window.
-const url = import.meta.env.VITE_SUPABASE_URL
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// The Supabase dashboard shows several URLs on one page — the project URL and
+// the REST, auth and storage endpoints built from it. Pasting one of the
+// endpoints here is an easy mistake and a baffling one to debug: the client
+// appends its own path to whatever it is given, so "…/rest/v1/" quietly
+// becomes "…/rest/v1/auth/v1" and every request fails on a path that does not
+// exist. Keeping only the origin makes all of those spellings work, along with
+// trailing slashes and stray whitespace.
+function normaliseUrl(raw) {
+  if (!raw) return undefined
+  try {
+    return new URL(String(raw).trim()).origin
+  } catch {
+    return undefined
+  }
+}
+
+const url = normaliseUrl(import.meta.env.VITE_SUPABASE_URL)
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
 
 export const isConfigured = Boolean(url && anonKey)
 
