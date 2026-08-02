@@ -30,10 +30,16 @@ export function unitLabel(unit, value = 2) {
   return value === 1 ? u.one : u.many
 }
 
+// On its own: "חצי קילו". Trailing a whole number: "קילו וחצי", "2 ק״ג ורבע".
 const FRACTIONS = {
   0.25: 'רבע',
   0.5: 'חצי',
   0.75: 'שלושת רבעי',
+}
+const FRACTION_SUFFIX = {
+  0.25: 'ורבע',
+  0.5: 'וחצי',
+  0.75: 'ושלושת רבעי',
 }
 
 const round = (n) => Math.round(n * 1000) / 1000
@@ -50,8 +56,8 @@ export function formatQuantity(q) {
 
     if (whole === 0 && FRACTIONS[frac]) return `${FRACTIONS[frac]} ${unit.base}`
     if (whole === 1 && frac === 0) return unit.base
-    if (whole === 1 && frac === 0.5) return `${unit.base} וחצי`
-    if (frac === 0.5) return `${whole} ${unit.many} וחצי`
+    if (whole === 1 && FRACTION_SUFFIX[frac]) return `${unit.base} ${FRACTION_SUFFIX[frac]}`
+    if (FRACTION_SUFFIX[frac]) return `${whole} ${unit.many} ${FRACTION_SUFFIX[frac]}`
     if (frac === 0) return `${whole} ${unit.many}`
     return `${value} ${unit.many}`
   }

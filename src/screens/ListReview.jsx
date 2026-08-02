@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import QuickAdd from '../components/QuickAdd.jsx'
 import NewProduct from '../components/NewProduct.jsx'
+import QuantityEditor from '../components/QuantityEditor.jsx'
 import { Spinner, Toast } from '../components/ui.jsx'
 import {
   getListItems, getProducts, getDepartments, createProduct,
-  addListItem, removeListItem, setListStatus,
+  addListItem, removeListItem, setListStatus, setListItemQuantity,
 } from '../lib/data.js'
 import { formatQuantities, formatSources } from '../lib/quantities.js'
 import { groupByDepartment } from '../lib/grouping.js'
@@ -21,6 +22,7 @@ export default function ListReview({ listId, onBack, onSent }) {
   const [products, setProducts] = useState([])
   const [departments, setDepartments] = useState([])
   const [creating, setCreating] = useState(null)
+  const [editingQty, setEditingQty] = useState(null)
   const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState(null)
 
@@ -59,6 +61,27 @@ export default function ListReview({ listId, onBack, onSent }) {
     setBusy(true)
     await setListStatus(listId, 'sent')
     onSent()
+  }
+
+  if (editingQty) {
+    const first = editingQty.quantities?.[0] ?? { value: 1, unit: 'unit' }
+    return (
+      <QuantityEditor
+        name={editingQty.name_snapshot}
+        value={first.value}
+        unit={first.unit}
+        onCancel={() => setEditingQty(null)}
+        onSave={async (value, unit) => {
+          setItems((s) =>
+            s.map((x) =>
+              x.id === editingQty.id ? { ...x, quantities: [{ value, unit }] } : x,
+            ),
+          )
+          setEditingQty(null)
+          await setListItemQuantity(editingQty.id, value, unit)
+        }}
+      />
+    )
   }
 
   if (creating) {
@@ -114,7 +137,13 @@ export default function ListReview({ listId, onBack, onSent }) {
                     )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span className="row-qty">{formatQuantities(item.quantities)}</span>
+                    <button
+                      className="qty-edit"
+                      onClick={() => setEditingQty(item)}
+                      aria-label={`לשנות את הכמות של ${item.name_snapshot}`}
+                    >
+                      {formatQuantities(item.quantities)}
+                    </button>
                     <button
                       className="icon-btn"
                       style={{ minWidth: 56, minHeight: 56, fontSize: 20 }}

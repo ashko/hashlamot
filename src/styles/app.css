@@ -40,9 +40,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .screen-body {
   flex: 1;
+  /* Without this a flex child refuses to shrink below its content, so the
+     scroller never actually scrolls and the list runs past the bars instead. */
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  /* -webkit-overflow-scrolling: touch is obsolete on modern iOS and is a known
+     cause of repaint artefacts, where a sticky heading and the rows under it
+     smear over each other during momentum scrolling. */
   overscroll-behavior: contain;
   padding-bottom: 1.5rem;
 }
@@ -160,7 +165,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .dept-band {
   position: sticky;
   top: 0;
-  z-index: 10;
+  /* Explicit layering, so which element covers which is never left to source
+     order. The heading rides on its own compositor layer to stop iOS painting
+     it and the rows into the same pixels mid-scroll. */
+  z-index: 5;
+  will-change: transform;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -185,8 +194,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 .row {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
   width: 100%;
@@ -205,6 +216,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-size: var(--fs-name);
   font-weight: 600;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 .row-sub {
   font-size: var(--fs-small);
@@ -262,6 +274,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* The name block is a button too, so the whole line is one big target. */
 .row-main {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -547,4 +560,74 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
+}
+
+/* ------------------------------------------------------------------ quantity */
+
+.qty-stepper {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gap-tap);
+  padding: 0 16px;
+}
+
+.qty-btn {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius);
+  border: 3px solid var(--rule);
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+}
+.qty-btn:active { background: var(--accent-soft); }
+.qty-btn[disabled] { opacity: .35; }
+
+.qty-value {
+  text-align: center;
+  font-size: var(--fs-h1);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.unit-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.unit-chip {
+  min-height: 56px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 3px solid var(--rule);
+  background: var(--surface);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.unit-chip.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* The quantity on a row is a control, so it has to look like one. */
+.qty-edit {
+  font-size: var(--fs-qty);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--rule);
+  border-radius: var(--radius-sm);
+  min-height: var(--tap);
+  padding: 0 14px;
+  cursor: pointer;
+  font-family: inherit;
 }

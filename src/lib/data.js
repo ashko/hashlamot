@@ -149,6 +149,14 @@ export const setListStatus = (listId, status) =>
 export const removeListItem = (id) =>
   DEMO ? demo.removeItem(id) : supabase.from('list_items').delete().eq('id', id)
 
+// Mom adjusting an amount before the list goes out. A merged row can hold
+// several incompatible units; editing collapses it to the single one she chose,
+// which is what she means by changing it.
+export const setListItemQuantity = (id, value, unit) =>
+  DEMO
+    ? demo.updateItem(id, { quantities: [{ value, unit }] })
+    : supabase.from('list_items').update({ quantities: [{ value, unit }] }).eq('id', id)
+
 export const setPlannerReply = (id, reply) =>
   DEMO ? demo.updateItem(id, { planner_reply: reply })
        : supabase.rpc('apply_item_update', {

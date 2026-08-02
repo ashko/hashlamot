@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import QuickAdd from '../components/QuickAdd.jsx'
 import NewProduct from '../components/NewProduct.jsx'
+import QuantityEditor from '../components/QuantityEditor.jsx'
 import { getProducts, getDepartments, createProduct, saveRecipe, deleteRecipe } from '../lib/data.js'
 import { formatQuantity } from '../lib/quantities.js'
 import { SEED_RECIPE_ICONS } from '../data/seed-products.js'
@@ -19,6 +20,7 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
   const [icon, setIcon] = useState(recipe?.icon ?? '🍽️')
   const [items, setItems] = useState([])
   const [creating, setCreating] = useState(null)
+  const [editingQty, setEditingQty] = useState(null)
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
@@ -78,6 +80,25 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
     if (!confirm(`למחוק את "${recipe.name}"?`)) return
     await deleteRecipe(recipe.id)
     onSaved()
+  }
+
+  if (editingQty) {
+    return (
+      <QuantityEditor
+        name={editingQty.name}
+        value={editingQty.quantity}
+        unit={editingQty.unit}
+        onCancel={() => setEditingQty(null)}
+        onSave={(quantity, unit) => {
+          setItems((s) =>
+            s.map((x) =>
+              x.product_id === editingQty.product_id ? { ...x, quantity, unit } : x,
+            ),
+          )
+          setEditingQty(null)
+        }}
+      />
+    )
   }
 
   if (creating) {
@@ -141,9 +162,13 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
                   <div className="row-name">{i.name}</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span className="row-qty">
+                  <button
+                    className="qty-edit"
+                    onClick={() => setEditingQty(i)}
+                    aria-label={`לשנות את הכמות של ${i.name}`}
+                  >
                     {formatQuantity({ value: i.quantity, unit: i.unit })}
-                  </span>
+                  </button>
                   <button
                     className="icon-btn"
                     style={{ minWidth: 56, minHeight: 56, fontSize: 20 }}
