@@ -21,11 +21,24 @@ export const supabase = isConfigured
     })
   : null
 
+// Which URL the client ended up with, for the error screen. A typo or a stray
+// space in the deploy variable is invisible in the code but obvious here.
+export const configuredUrl = url ?? '(לא הוגדר)'
+
 export async function ensureSignedIn() {
   if (!supabase) return null
-  const { data } = await supabase.auth.getSession()
-  if (data.session) return data.session.user
+
+  const { data, error: sessionError } = await supabase.auth.getSession()
+  if (sessionError) {
+    // A stored session the server will not accept again would fail on every
+    // future load too. Throw it away and carry on as a fresh device.
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => {})
+  } else if (data.session) {
+    return data.session.user
+  }
+
   const { data: anon, error } = await supabase.auth.signInAnonymously()
   if (error) throw error
+  if (!anon?.user) throw new Error('ההתחברות לא החזירה משתמש')
   return anon.user
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSession } from './lib/session.jsx'
+import { configuredUrl } from './lib/supabase.js'
 import { getLatestList, buildList } from './lib/data.js'
 import { startOutbox } from './lib/outbox.js'
 import Pairing from './screens/Pairing.jsx'
@@ -76,11 +77,42 @@ export default function App() {
               >
                 {detail}
               </p>
+              <p
+                className="subtle"
+                style={{
+                  marginTop: 10, fontSize: 'var(--fs-small)',
+                  wordBreak: 'break-all', direction: 'ltr', opacity: .8,
+                }}
+              >
+                {configuredUrl}
+              </p>
             </div>
           )}
         </div>
         <div className="screen-foot">
           <button className="btn" onClick={session.reload}>נסו שוב</button>
+          {!offline && (
+            <button
+              className="btn btn-quiet"
+              onClick={async () => {
+                // Last resort: drop every local trace and start clean. Nothing
+                // here is the source of truth, so there is nothing to lose.
+                try {
+                  localStorage.clear()
+                  const regs = await navigator.serviceWorker?.getRegistrations?.()
+                  await Promise.all((regs ?? []).map((r) => r.unregister()))
+                  const keys = await caches?.keys?.()
+                  await Promise.all((keys ?? []).map((k) => caches.delete(k)))
+                  indexedDB.deleteDatabase('hashlamot')
+                } catch {
+                  // nothing to clear
+                }
+                location.reload()
+              }}
+            >
+              ניקוי והתחלה מחדש
+            </button>
+          )}
         </div>
       </div>
     )
