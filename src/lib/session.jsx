@@ -19,14 +19,19 @@ export function SessionProvider({ children }) {
       return
     }
 
-    try {
-      const user = await ensureSignedIn()
+    // Startup is four calls against three different Supabase services, and a
+    // bare message like "invalid path" says nothing about which one broke.
+    // Naming the step turns a guessing game into a single glance.
+    let step = 'התחברות'
+    const at = (name, fn) => { step = name; return fn() }
 
-      const { data: member, error } = await supabase
-        .from('members')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle()
+    try {
+      const user = await at('התחברות', () => ensureSignedIn())
+      if (!user) throw new Error('לא התקבל משתמש מהשרת')
+
+      const { data: member, error } = await at('קריאת המשתמשים', () =>
+        supabase.from('members').select('*').eq('user_id', user.id).maybeSingle(),
+      )
       if (error) throw error
 
       if (!member) {
@@ -34,11 +39,10 @@ export function SessionProvider({ children }) {
         return
       }
 
-      const { data: household } = await supabase
-        .from('households')
-        .select('*')
-        .eq('id', member.household_id)
-        .maybeSingle()
+      const { data: household, error: hErr } = await at('קריאת משק הבית', () =>
+        supabase.from('households').select('*').eq('id', member.household_id).maybeSingle(),
+      )
+      if (hErr) throw hErr
 
       const session = { status: 'ready', user, member, household }
       setState(session)
@@ -50,7 +54,7 @@ export function SessionProvider({ children }) {
       if (cached?.member) {
         setState({ status: 'ready', offline: true, ...cached })
       } else {
-        setState({ status: 'error', error: err })
+        setState({ status: 'error', error: err, step })
       }
     }
   }, [])

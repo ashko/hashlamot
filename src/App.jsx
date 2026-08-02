@@ -64,12 +64,19 @@ export default function App() {
             {offline ? 'נסו שוב כשתהיה רשת.' : 'אפשר לנסות שוב.'}
           </Empty>
           {!offline && detail && (
-            <p
-              className="pad subtle"
-              style={{ textAlign: 'center', wordBreak: 'break-word', direction: 'ltr' }}
-            >
-              {detail}
-            </p>
+            <div className="pad" style={{ textAlign: 'center' }}>
+              {session.step && (
+                <p className="subtle" style={{ margin: '0 0 6px', fontWeight: 700 }}>
+                  נכשל בשלב: {session.step}
+                </p>
+              )}
+              <p
+                className="subtle"
+                style={{ margin: 0, wordBreak: 'break-word', direction: 'ltr' }}
+              >
+                {detail}
+              </p>
+            </div>
           )}
         </div>
         <div className="screen-foot">
