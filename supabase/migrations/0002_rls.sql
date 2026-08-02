@@ -30,6 +30,14 @@ as $$
   )
 $$;
 
+-- Supabase normally grants these automatically via default privileges. Stating
+-- them makes the migrations self-contained and survives a project where the
+-- defaults were changed. Grants only open the door; RLS below decides which
+-- rows are behind it.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant select on units, departments to anon, authenticated;
+
 alter table households        enable row level security;
 alter table members           enable row level security;
 alter table products          enable row level security;

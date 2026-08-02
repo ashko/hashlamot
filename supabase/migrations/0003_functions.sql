@@ -104,20 +104,38 @@ end $$;
 
 -- ============================================================ quantities
 
--- Renders a summed base amount in the friendliest unit of its family:
--- 1500 g of mass comes back as 1.5 kg, 300 g stays grams.
+-- Chooses the unit a person would say out loud.
+--
+-- Hebrew has natural words for quarters — רבע קילו, חצי קילו, קילו וחצי — so a
+-- total lands in the larger unit whenever it falls on a quarter step, and stays
+-- in the smaller one otherwise. 500g becomes "חצי קילו"; 300g stays "300 גרם",
+-- because "0.3 קילו" is not something anyone says.
 create or replace function public.display_quantity(p_base numeric, p_family text)
 returns jsonb
-language sql stable set search_path = public
+language plpgsql stable set search_path = public
 as $$
-  select jsonb_build_object('value', round(p_base / u.factor, 3), 'unit', u.unit)
-  from units u
-  where u.family = p_family
-    and (u.factor <= p_base
-         or u.factor = (select min(factor) from units where family = p_family))
-  order by u.factor desc
-  limit 1
-$$;
+declare
+  big_unit text; big_factor numeric;
+  small_unit text; small_factor numeric;
+  v numeric;
+begin
+  select unit, factor into big_unit, big_factor
+    from units where family = p_family order by factor desc limit 1;
+  select unit, factor into small_unit, small_factor
+    from units where family = p_family order by factor asc limit 1;
+
+  -- Counting families (units, packs, trays…) have a single member.
+  if big_unit is null or big_unit = small_unit then
+    return jsonb_build_object('value', round(p_base / coalesce(small_factor, 1), 3),
+                              'unit', coalesce(small_unit, 'unit'));
+  end if;
+
+  v := p_base / big_factor;
+  if v >= 0.25 and (v * 4) = floor(v * 4) then
+    return jsonb_build_object('value', round(v, 3), 'unit', big_unit);
+  end if;
+  return jsonb_build_object('value', round(p_base / small_factor, 3), 'unit', small_unit);
+end $$;
 
 -- ============================================================ list building
 
@@ -245,16 +263,25 @@ end $$;
 
 -- ============================================================ offline-safe writes
 
--- Every status change from Dad's phone lands here. Guarded by the client's own
--- clock so a write that sat in the outbox through the frozen aisle cannot
--- overwrite something newer when it finally drains. Idempotent on retry.
+-- Every status change from Dad's phone lands here.
+--
+-- The ordering guard only applies to writes from the *same* device: one phone's
+-- own queued updates must never arrive out of order, but comparing timestamps
+-- across two phones would mean the one with the slower clock quietly loses.
+-- Two people editing the same item is not a real scenario here; a phone with a
+-- skewed clock is.
+--
+-- Returns whether it actually applied, so a rejected write is visible to the
+-- caller instead of looking exactly like success.
 create or replace function public.apply_item_update(
   p_item      uuid,
   p_patch     jsonb,
   p_client_ts timestamptz
-) returns void
+) returns boolean
 language plpgsql set search_path = public
 as $$
+declare
+  v_applied int;
 begin
   update list_items li
      set status = coalesce((p_patch->>'status')::item_status, li.status),
@@ -271,7 +298,11 @@ begin
          updated_at = now(),
          client_updated_at = p_client_ts
    where li.id = p_item
-     and p_client_ts >= li.client_updated_at;
+     and (li.updated_by is distinct from auth.uid()   -- another device: apply
+          or p_client_ts >= li.client_updated_at);    -- same device: no going back
+
+  get diagnostics v_applied = row_count;
+  return v_applied > 0;
 end $$;
 
 create or replace function public.set_list_status(p_list uuid, p_status list_status)

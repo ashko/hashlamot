@@ -108,10 +108,10 @@ create table products (
   created_at    timestamptz not null default now()
 );
 create index products_household_idx on products (household_id);
--- Search ranks by what she actually buys, not alphabetically.
+-- Ranked by what she actually buys, not alphabetically. This is the only index
+-- the app needs: the catalog is a few hundred rows, so it is loaded once and
+-- searched in the browser, which is also what makes search work with no signal.
 create index products_usage_idx on products (household_id, usage_count desc);
-create index products_search_idx on products
-  using gin (to_tsvector('simple', name || ' ' || array_to_string(aliases, ' ')));
 
 -- ---------------------------------------------------------------- recipes
 
@@ -186,9 +186,11 @@ create table list_items (
   bought_at         timestamptz,   -- feeds the learned aisle order
   updated_by        uuid references auth.users,
   updated_at        timestamptz not null default now(),
-  -- Last write wins by the *client's* clock, so a queued offline update can
-  -- never clobber a newer one when it finally drains.
-  client_updated_at timestamptz not null default now()
+  -- Ordering guard for offline writes, compared against the *client's* clock.
+  -- It starts at epoch on purpose: defaulting to now() stamped every new row
+  -- with server time, so a phone running even a minute slow had its first
+  -- marks rejected — silently, which is the worst way to lose them.
+  client_updated_at timestamptz not null default 'epoch'
 );
 create index list_items_list_idx on list_items (list_id, sort_index);
 
@@ -205,5 +207,15 @@ create table push_subscriptions (
 );
 
 -- Realtime: Dad's screen and Mom's tracking both follow list_items.
-alter publication supabase_realtime add table list_items;
-alter publication supabase_realtime add table lists;
+-- Guarded so re-running the file is not an error.
+do $$
+begin
+  if not exists (select 1 from pg_publication_tables
+                 where pubname = 'supabase_realtime' and tablename = 'list_items') then
+    alter publication supabase_realtime add table list_items;
+  end if;
+  if not exists (select 1 from pg_publication_tables
+                 where pubname = 'supabase_realtime' and tablename = 'lists') then
+    alter publication supabase_realtime add table lists;
+  end if;
+end $$;

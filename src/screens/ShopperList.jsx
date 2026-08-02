@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import ItemRow from '../components/ItemRow.jsx'
 import { SyncBar, Spinner, Empty } from '../components/ui.jsx'
 import { getListItems, getDepartments, setListStatus, subscribeToList } from '../lib/data.js'
-import { queueItemUpdate, flush } from '../lib/outbox.js'
+import { queueItemUpdate, flush, onWriteRejected } from '../lib/outbox.js'
 import { groupByDepartment, countByStatus } from '../lib/grouping.js'
 import { useSession } from '../lib/session.jsx'
 import { uploadImage } from '../lib/images.js'
@@ -69,8 +69,10 @@ export default function ShopperList({ list, onDone, onSettings }) {
     }
     window.addEventListener('online', onBack)
     document.addEventListener('visibilitychange', onBack)
+    const unsubRejected = onWriteRejected(refresh)
     return () => {
       unsub()
+      unsubRejected()
       window.removeEventListener('online', onBack)
       document.removeEventListener('visibilitychange', onBack)
     }

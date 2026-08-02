@@ -10,6 +10,7 @@ import { outboxAdd, outboxAll, outboxDel, outboxPut } from './idb.js'
 import { isDemo, demo } from './demo.js'
 
 const listeners = new Set()
+const rejectListeners = new Set()
 let pending = 0
 let flushing = false
 let timer = null
@@ -23,6 +24,13 @@ export function onOutboxChange(fn) {
 function announce(n) {
   pending = n
   listeners.forEach((fn) => fn(n))
+}
+
+// Screens subscribe to this to refetch when one of their optimistic updates
+// turned out not to be the last word.
+export function onWriteRejected(fn) {
+  rejectListeners.add(fn)
+  return () => rejectListeners.delete(fn)
 }
 
 async function refreshCount() {
@@ -48,10 +56,11 @@ export async function flush() {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return
 
   flushing = true
+  const rejected = []
   try {
     const entries = await outboxAll()
     for (const entry of entries) {
-      const { error } = await supabase.rpc('apply_item_update', {
+      const { data: applied, error } = await supabase.rpc('apply_item_update', {
         p_item: entry.itemId,
         p_patch: entry.patch,
         p_client_ts: entry.clientUpdatedAt,
@@ -59,6 +68,11 @@ export async function flush() {
 
       if (!error) {
         await outboxDel(entry.id)
+        // The server can accept the call and still decline the write, when a
+        // newer update from this same phone already landed. That is a settled
+        // outcome, not a retry — but the screen is now showing something the
+        // server does not have, so say so and let the list refetch.
+        if (applied === false) rejected.push(entry.itemId)
         continue
       }
 
@@ -78,6 +92,7 @@ export async function flush() {
     flushing = false
     const left = await refreshCount()
     schedule(left.length > 0)
+    if (rejected.length) rejectListeners.forEach((fn) => fn(rejected))
   }
 }
 
