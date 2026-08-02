@@ -50,12 +50,30 @@ export default function App() {
   }
 
   if (session?.status === 'error') {
+    // "No connection" used to be the answer to every possible failure here,
+    // which sent someone hunting for a network problem when the real cause was
+    // a setting. Only say it when the device is actually offline; otherwise
+    // show what went wrong, quietly, under a message the parents can act on.
+    const offline = typeof navigator !== 'undefined' && navigator.onLine === false
+    const detail = session.error?.message || String(session.error ?? '')
+
     return (
       <div className="screen">
         <div className="screen-body">
-          <Empty icon="📴" title="אין חיבור">
-            נסו שוב כשתהיה רשת.
+          <Empty icon={offline ? '📴' : '⚠️'} title={offline ? 'אין חיבור' : 'משהו לא עבד'}>
+            {offline ? 'נסו שוב כשתהיה רשת.' : 'אפשר לנסות שוב.'}
           </Empty>
+          {!offline && detail && (
+            <p
+              className="pad subtle"
+              style={{ textAlign: 'center', wordBreak: 'break-word', direction: 'ltr' }}
+            >
+              {detail}
+            </p>
+          )}
+        </div>
+        <div className="screen-foot">
+          <button className="btn" onClick={session.reload}>נסו שוב</button>
         </div>
       </div>
     )
