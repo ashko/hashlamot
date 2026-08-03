@@ -6,7 +6,7 @@ import { Spinner, Empty } from '../components/ui.jsx'
 // empty and every dish is new; by week five she taps four times and is done.
 
 export default function PlannerHome({
-  onEditRecipe, onOpenList, onQuickList, onSettings, banner, footer,
+  onEditRecipe, onOpenList, onQuickList, onSettings, banner, footer, setup,
 }) {
   const [recipes, setRecipes] = useState(null)
   const [selected, setSelected] = useState([])
@@ -41,6 +41,19 @@ export default function PlannerHome({
       </div>
 
       <div className="screen-body">
+        {setup && (
+          <div className="pad" style={{ paddingBottom: 12 }}>
+            <button className="setup-card" onClick={setup.onOpen}>
+              <h2>לחבר את הטלפון של {setup.who}</h2>
+              <p>
+                תקבל קוד בן 8 תווים להקריא לה.
+                {setup.rest > 0 ? ' אחר כך נחבר גם את השני.' : ''}
+              </p>
+              <span className="go">להתחיל ←</span>
+            </button>
+          </div>
+        )}
+
         {banner && (
           <div className="pad" style={{ paddingBottom: 12 }}>
             <button

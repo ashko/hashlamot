@@ -822,3 +822,59 @@ button, input, select, textarea { font: inherit; color: inherit; }
     transition-duration: .001ms !important;
   }
 }
+
+/* ------------------------------------------------------------------ pairing */
+
+.pair-code {
+  font-family: var(--font-num);
+  font-size: clamp(34px, 11vw, 46px);
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-align: center;
+  padding: 22px 12px;
+  border-radius: var(--r-lg);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+  /* Read aloud across a room, so it must not break or wrap. */
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.pair-url {
+  font-family: var(--font-num);
+  font-size: var(--fs-small);
+  direction: ltr;
+  text-align: center;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* The prompt that will not let you miss the one task left after setup. */
+.setup-card {
+  display: block;
+  width: 100%;
+  text-align: start;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  box-shadow: var(--e2);
+  transition: transform var(--t-fast) var(--ease);
+}
+.setup-card:active { transform: scale(.985); }
+.setup-card h2 {
+  margin: 0 0 6px;
+  font-size: var(--fs-name);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: var(--lh-tight);
+}
+.setup-card p { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.setup-card .go { display: block; margin-top: 10px; color: var(--accent); font-weight: 700; }

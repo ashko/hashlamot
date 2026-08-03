@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useSession } from '../lib/session.jsx'
-import { supabase } from '../lib/supabase.js'
 import { getDepartments, suggestedOrder, completedTrips } from '../lib/data.js'
 
 const SCALES = [
@@ -9,10 +8,9 @@ const SCALES = [
   { value: 'xlarge', label: 'ענק' },
 ]
 
-export default function Settings({ onBack }) {
-  const { member, household, setTextScale, setDepartmentOrder, reload } = useSession()
+export default function Settings({ onBack, onConnect }) {
+  const { member, household, setTextScale, setDepartmentOrder } = useSession()
   const [departments, setDepartments] = useState([])
-  const [code, setCode] = useState(null)
   const [suggestion, setSuggestion] = useState(null)
   const [trips, setTrips] = useState(0)
 
@@ -48,14 +46,6 @@ export default function Settings({ onBack }) {
     setDepartmentOrder(next)
   }
 
-  async function openPairing() {
-    const { data, error } = await supabase.rpc('open_pairing', { p_minutes: 10 })
-    if (!error) {
-      setCode(data)
-      reload()
-    }
-  }
-
   return (
     <div className="screen">
       <div className="topbar">
@@ -64,6 +54,25 @@ export default function Settings({ onBack }) {
       </div>
 
       <div className="screen-body stack" style={{ paddingTop: 12 }}>
+        {/* First, not last: after setup this is the only thing anyone comes
+            here to do, and it used to sit under fifteen rows of aisle order. */}
+        {isAdmin && (
+          <div className="pad stack">
+            <span className="label">חיבור מכשיר</span>
+            <div className="btn-row">
+              <button className="btn btn-ghost" onClick={() => onConnect('planner')}>
+                הטלפון של אמא
+              </button>
+              <button className="btn btn-ghost" onClick={() => onConnect('shopper')}>
+                הטלפון של אבא
+              </button>
+            </div>
+            <p className="quickadd-hint">
+              הצירוף סגור כברירת מחדל. הקוד חד־פעמי ונשרף מיד אחרי שימוש.
+            </p>
+          </div>
+        )}
+
         <div className="pad stack">
           <span className="label">גודל הטקסט</span>
           <div className="segmented">
@@ -132,28 +141,6 @@ export default function Settings({ onBack }) {
                 </div>
               )
             })}
-          </div>
-        )}
-
-        {isAdmin && (
-          <div className="pad stack" style={{ marginTop: 12 }}>
-            <span className="label">חיבור מכשיר חדש</span>
-            {code ? (
-              <div className="card card-accent">
-                <p style={{ margin: '0 0 8px' }}>הקוד תקף ל־10 דקות:</p>
-                <p style={{
-                  margin: 0, fontFamily: 'var(--font-num)', fontSize: 'var(--fs-h1)',
-                  fontWeight: 800, letterSpacing: '.15em',
-                }}>{code}</p>
-              </div>
-            ) : (
-              <button className="btn btn-ghost" onClick={openPairing}>
-                פתיחת חלון צירוף
-              </button>
-            )}
-            <p className="quickadd-hint">
-              הצירוף סגור כברירת מחדל. הקוד חד־פעמי ונסגר מיד אחרי שימוש.
-            </p>
           </div>
         )}
 

@@ -44,6 +44,13 @@ export const getListItems = (listId) =>
     supabase.from('list_items').select('*').eq('list_id', listId).order('sort_index'),
   )
 
+// Who is actually connected. Drives the setup prompt: until both parents have
+// a device, connecting them is the only thing that matters on this screen.
+export const getMembers = () =>
+  DEMO
+    ? Promise.resolve([demo.session.member])
+    : cached('members', () => supabase.from('members').select('id, name, role'))
+
 export async function getLatestList() {
   if (DEMO) return demo.getLatestList()
   const { data } = await supabase

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from './lib/session.jsx'
 import { configuredUrl } from './lib/supabase.js'
-import { getLatestList, buildList } from './lib/data.js'
+import { getLatestList, buildList, getMembers } from './lib/data.js'
 import { startOutbox } from './lib/outbox.js'
 import Pairing from './screens/Pairing.jsx'
 import PlannerHome from './screens/PlannerHome.jsx'
@@ -10,12 +10,14 @@ import ListReview from './screens/ListReview.jsx'
 import LiveTracking from './screens/LiveTracking.jsx'
 import ShopperList from './screens/ShopperList.jsx'
 import Settings from './screens/Settings.jsx'
+import ConnectDevice from './screens/ConnectDevice.jsx'
 import { Spinner, Empty } from './components/ui.jsx'
 
 export default function App() {
   const session = useSession()
   const [view, setView] = useState({ name: 'home' })
   const [list, setList] = useState(null)
+  const [members, setMembers] = useState(null)
   // The admin is not a third kind of user with a third kind of screen — they
   // just need to see what each parent sees, to help over the phone.
   const [asRole, setAsRole] = useState(null)
@@ -33,6 +35,7 @@ export default function App() {
   useEffect(() => {
     if (session?.status !== 'ready') return
     getLatestList().then(setList)
+    getMembers().then(setMembers)
   }, [session?.status, view.name])
 
   if (session?.status === 'loading') return <Spinner />
@@ -125,8 +128,24 @@ export default function App() {
   const go = (name, extra = {}) => setView({ name, ...extra })
 
   if (view.name === 'settings') {
-    return <Settings onBack={() => go('home')} />
+    return <Settings onBack={() => go('home')} onConnect={(r) => go('connect', { role: r })} />
   }
+
+  if (view.name === 'connect') {
+    return (
+      <ConnectDevice
+        role={view.role}
+        onBack={() => go('home')}
+        onDone={() => go('home')}
+      />
+    )
+  }
+
+  // Until both parents have a device the app is not set up, whatever else is
+  // on screen. Missing roles drive the prompt below.
+  const missing = members
+    ? ['planner', 'shopper'].filter((r) => !members.some((m) => m.role === r))
+    : []
 
   // ------------------------------------------------------------------ shopper
   if (role === 'shopper') {
@@ -212,6 +231,16 @@ export default function App() {
       onSettings={() => go('settings')}
       // Status belongs at the top where she sees it on arrival, not behind a
       // floating bar that covers the last row of her own recipes.
+      setup={
+        isAdmin && missing.length
+          ? {
+              role: missing[0],
+              who: missing[0] === 'planner' ? 'אמא' : 'אבא',
+              rest: missing.length - 1,
+              onOpen: () => go('connect', { role: missing[0] }),
+            }
+          : null
+      }
       banner={
         watching ? {
           label: list.status === 'done' ? 'לראות את הסיכום' : 'לראות איפה אבא',
