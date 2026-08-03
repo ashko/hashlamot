@@ -112,7 +112,6 @@ export default function ListReview({ listId, onBack, onSent }) {
           onCreate={setCreating}
           placeholder="+ להוסיף עוד משהו"
           autoFocus={false}
-          suggestWhenEmpty={false}
         />
 
         <div style={{ marginTop: 16 }}>

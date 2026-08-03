@@ -9,11 +9,16 @@ import { unitLabel } from '../lib/quantities.js'
 // there is no week two. Hence: one field that never loses focus, matches from
 // two letters, arrives with the right unit already filled in, and treats
 // "not in the catalog" as one more tap rather than a detour.
+//
+// Nothing appears under the field until she types. A list of "products you
+// bought before" sounds helpful and is not: she already knows what she is
+// adding, and six guesses filled the screen between the field and the
+// ingredients she was building up.
 
 const normalise = (s) =>
   (s || '')
     .toLowerCase()
-    .replace(/[֑-ׇ]/g, '')  // niqqud and cantillation
+    .replace(/[֑-ׇ]/g, '')   // niqqud and cantillation
     .replace(/["'׳״]/g, '')            // geresh / gershayim, typed inconsistently
     .replace(/\s+/g, ' ')
     .trim()
@@ -35,10 +40,6 @@ export default function QuickAdd({
   onCreate,
   placeholder = 'מה צריך לקנות?',
   autoFocus = true,
-  // On the recipe screen adding *is* the task, so offer her usual products
-  // straight away. On the review screen the list itself is the content, and a
-  // panel of suggestions on arrival pushed it off the bottom of the phone.
-  suggestWhenEmpty = true,
 }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
@@ -49,27 +50,16 @@ export default function QuickAdd({
 
   const matches = useMemo(() => {
     const q = normalise(query)
-
-    // Before she types, offer what she has actually bought before — and only
-    // that. Ranking the whole catalogue put six arbitrary products above the
-    // field on day one, taking up the screen and answering a question nobody
-    // asked. The shortcut earns its space once there is history behind it.
-    if (!q) {
-      if (!suggestWhenEmpty) return []
-      const used = products.filter((p) => (p.usage_count ?? 0) > 0)
-      if (!used.length) return []
-      return used
-        .sort((a, b) => (b.usage_count ?? 0) - (a.usage_count ?? 0) || a.name.localeCompare(b.name, 'he'))
-        .slice(0, 6)
-    }
+    if (!q) return []
 
     return products
       .map((p) => ({ p, s: score(p, q) }))
       .filter((x) => x.s !== Infinity)
+      // Ties broken by what she actually buys, so the common one leads.
       .sort((a, b) => a.s - b.s || (b.p.usage_count ?? 0) - (a.p.usage_count ?? 0))
       .slice(0, 7)
       .map((x) => x.p)
-  }, [products, query, suggestWhenEmpty])
+  }, [products, query])
 
   const exact = normalise(query) && matches.some((p) => normalise(p.name) === normalise(query))
 
@@ -101,43 +91,34 @@ export default function QuickAdd({
         autoCorrect="off"
         aria-label={placeholder}
       />
-      <p className="quickadd-hint">
-        {query ? 'הקישי על המוצר להוספה' : 'אפשר גם להכתיב במקום להקליד 🎤'}
-      </p>
 
-      {(matches.length > 0 || query.trim()) && (
-      <div className="suggestions" role="listbox">
-        {matches.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            className="suggestion"
-            onClick={() => pick(p)}
-          >
-            <span className="emoji" aria-hidden="true">{p.icon}</span>
-            <span className="name">{p.name}</span>
-            <span className="unit">
-              {p.default_qty !== 1 ? `${p.default_qty} ` : ''}
-              {unitLabel(p.default_unit, Number(p.default_qty))}
-            </span>
-          </button>
-        ))}
+      {query.trim() && (
+        <div className="suggestions" role="listbox">
+          {matches.map((p) => (
+            <button key={p.id} type="button" className="suggestion" onClick={() => pick(p)}>
+              <span className="emoji" aria-hidden="true">{p.icon}</span>
+              <span className="name">{p.name}</span>
+              <span className="unit">
+                {p.default_qty !== 1 ? `${p.default_qty} ` : ''}
+                {unitLabel(p.default_unit, Number(p.default_qty))}
+              </span>
+            </button>
+          ))}
 
-        {query.trim() && !exact && (
-          <button
-            type="button"
-            className="suggestion create"
-            onClick={() => {
-              onCreate(query.trim())
-              setQuery('')
-            }}
-          >
-            <span className="emoji" aria-hidden="true">＋</span>
-            <span className="name">מוצר חדש: {query.trim()}</span>
-          </button>
-        )}
-
-      </div>
+          {!exact && (
+            <button
+              type="button"
+              className="suggestion create"
+              onClick={() => {
+                onCreate(query.trim())
+                setQuery('')
+              }}
+            >
+              <span className="emoji" aria-hidden="true">＋</span>
+              <span className="name">מוצר חדש: {query.trim()}</span>
+            </button>
+          )}
+        </div>
       )}
     </div>
   )
