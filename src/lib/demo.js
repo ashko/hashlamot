@@ -31,11 +31,15 @@ const products = SEED_PRODUCTS.map(([name, dept, unit, qty, icon, aliases], i) =
   default_unit: unit,
   default_qty: qty,
   aliases,
-  usage_count: Math.max(0, 40 - i),
+  // A freshly seeded catalogue has no history at all — that is the state a new
+  // household is actually in, and pretending otherwise hid a real problem.
+  // Only the products the demo's dishes use have been bought before.
+  usage_count: 0,
   is_seed: true,
 }))
 
 const byName = (n) => products.find((p) => p.name === n)
+const markUsed = (n, times) => { const p = byName(n); if (p) p.usage_count = times }
 
 const recipes = [
   { id: 'r1', name: 'שניצל', icon: '🍗',
@@ -66,6 +70,11 @@ const recipes = [
     })
     .filter(Boolean),
 }))
+
+// A household a few weeks in: the staples it keeps buying have history behind
+// them, everything else in the catalogue has none.
+for (const [n, t] of [['חלב', 9], ['ביצים', 8], ['לחם אחיד', 7],
+                      ['עגבניות', 6], ['מלפפונים', 5], ['בצל', 4]]) markUsed(n, t)
 
 const list = {
   id: 'l1',

@@ -22,6 +22,7 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
   const [creating, setCreating] = useState(null)
   const [editingQty, setEditingQty] = useState(null)
   const [busy, setBusy] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     Promise.all([getProducts(), getDepartments()]).then(([p, d]) => {
@@ -76,8 +77,12 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
     }
   }
 
+  // A visible two-step instead of a native dialog: the spec rules out blocking
+  // pop-ups, and a system alert in the wrong language is exactly the kind of
+  // thing that makes someone put the phone down.
   async function remove() {
-    if (!confirm(`למחוק את "${recipe.name}"?`)) return
+    if (!confirmDelete) { setConfirmDelete(true); return }
+    setBusy(true)
     await deleteRecipe(recipe.id)
     onSaved()
   }
@@ -214,10 +219,21 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
 
       <div className="screen-foot">
         <button className="btn" disabled={busy || !name.trim()} onClick={save}>
-          {busy ? 'רגע…' : 'שמירת המנה'}
+          {busy ? 'רגע…' : recipe ? 'שמירת השינויים' : 'שמירת המנה'}
         </button>
         {recipe && (
-          <button className="btn btn-quiet" onClick={remove}>מחיקת המנה</button>
+          confirmDelete ? (
+            <div className="btn-row">
+              <button className="btn btn-danger" disabled={busy} onClick={remove}>
+                כן, למחוק
+              </button>
+              <button className="btn btn-quiet" onClick={() => setConfirmDelete(false)}>
+                ביטול
+              </button>
+            </div>
+          ) : (
+            <button className="btn btn-quiet" onClick={remove}>מחיקת המנה</button>
+          )
         )}
       </div>
     </div>

@@ -878,3 +878,40 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .setup-card p { margin: 0; color: var(--muted); font-size: var(--fs-small); }
 .setup-card .go { display: block; margin-top: 10px; color: var(--accent); font-weight: 700; }
+
+/* The dish card holds two separate jobs: pick it for this week, or edit it. */
+.recipe-card { position: relative; }
+
+.recipe-pick {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1;
+  cursor: pointer;
+  /* Leaves room for the edit button so a long dish name never runs under it. */
+  padding-inline-end: 46px;
+}
+
+.recipe-edit {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--rule);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+.recipe-edit:active { transform: scale(.9); background: var(--accent-soft); color: var(--accent); }
+.recipe-card.selected .recipe-edit { border-color: var(--bought-line); }

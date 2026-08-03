@@ -50,11 +50,15 @@ export default function QuickAdd({
   const matches = useMemo(() => {
     const q = normalise(query)
 
-    // Before she types anything, offer what she actually buys. Week one that
-    // is the seed catalog's staples; by week five it is her own shelf.
+    // Before she types, offer what she has actually bought before — and only
+    // that. Ranking the whole catalogue put six arbitrary products above the
+    // field on day one, taking up the screen and answering a question nobody
+    // asked. The shortcut earns its space once there is history behind it.
     if (!q) {
       if (!suggestWhenEmpty) return []
-      return [...products]
+      const used = products.filter((p) => (p.usage_count ?? 0) > 0)
+      if (!used.length) return []
+      return used
         .sort((a, b) => (b.usage_count ?? 0) - (a.usage_count ?? 0) || a.name.localeCompare(b.name, 'he'))
         .slice(0, 6)
     }

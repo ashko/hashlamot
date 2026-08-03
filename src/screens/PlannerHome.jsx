@@ -86,20 +86,32 @@ export default function PlannerHome({
           {recipes.map((r) => {
             const on = selected.includes(r.id)
             return (
-              <button
-                key={r.id}
-                type="button"
-                className={`recipe-card${on ? ' selected' : ''}`}
-                onClick={() => toggle(r.id)}
-                onContextMenu={(e) => { e.preventDefault(); onEditRecipe(r) }}
-                aria-pressed={on}
-              >
-                <span className="emoji" aria-hidden="true">{r.icon}</span>
-                <span className="name">{r.name}</span>
-                <span className="mark">
-                  {on ? '✓ נבחר' : `${r.recipe_ingredients?.length ?? 0} מרכיבים`}
-                </span>
-              </button>
+              /* Picking and editing are two different jobs, so they are two
+                 different buttons. Editing used to be a long press, which the
+                 spec forbids and which iOS swallows anyway — there was no way
+                 to change a dish at all. */
+              <div className={`recipe-card${on ? ' selected' : ''}`} key={r.id}>
+                <button
+                  type="button"
+                  className="recipe-pick"
+                  onClick={() => toggle(r.id)}
+                  aria-pressed={on}
+                >
+                  <span className="emoji" aria-hidden="true">{r.icon}</span>
+                  <span className="name">{r.name}</span>
+                  <span className="mark">
+                    {on ? '✓ נבחר' : `${r.recipe_ingredients?.length ?? 0} מרכיבים`}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="recipe-edit"
+                  onClick={() => onEditRecipe(r)}
+                  aria-label={`עריכת ${r.name}`}
+                >
+                  ✎
+                </button>
+              </div>
             )
           })}
 
