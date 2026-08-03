@@ -34,3 +34,8 @@ export function countByStatus(items) {
   out.done = out.bought + out.missing + out.substituted
   return out
 }
+
+// Each aisle carries its own hue so the eye can navigate by more than reading.
+// Used only on the icon well and the leading rule — never as a fill, so it can
+// never compete with the three status colours that actually matter.
+export const departmentStyle = (key) => ({ '--dept': `var(--d-${key}, var(--d-other))` })

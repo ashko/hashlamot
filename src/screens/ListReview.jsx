@@ -8,7 +8,7 @@ import {
   addListItem, removeListItem, setListStatus, setListItemQuantity,
 } from '../lib/data.js'
 import { formatQuantities, formatSources } from '../lib/quantities.js'
-import { groupByDepartment } from '../lib/grouping.js'
+import { groupByDepartment, departmentStyle } from '../lib/grouping.js'
 import { listAsText, shareToWhatsApp } from '../lib/share.js'
 import { useSession } from '../lib/session.jsx'
 
@@ -118,8 +118,8 @@ export default function ListReview({ listId, onBack, onSent }) {
         <div style={{ marginTop: 16 }}>
           {groups.map((g) => (
             <div key={g.key}>
-              <div className="dept-band">
-                <span aria-hidden="true">{g.icon}</span>
+              <div className="dept-band" style={departmentStyle(g.key)}>
+                <span className="dept-icon" aria-hidden="true">{g.icon}</span>
                 {g.name}
                 <span className="count">{g.items.length}</span>
               </div>

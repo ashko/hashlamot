@@ -3,7 +3,7 @@ import ItemRow from '../components/ItemRow.jsx'
 import { SyncBar, Spinner, Empty } from '../components/ui.jsx'
 import { getListItems, getDepartments, setListStatus, subscribeToList } from '../lib/data.js'
 import { queueItemUpdate, flush, onWriteRejected } from '../lib/outbox.js'
-import { groupByDepartment, countByStatus } from '../lib/grouping.js'
+import { groupByDepartment, countByStatus, departmentStyle } from '../lib/grouping.js'
 import { useSession } from '../lib/session.jsx'
 import { uploadImage } from '../lib/images.js'
 
@@ -196,8 +196,8 @@ export default function ShopperList({ list, onDone, onSettings }) {
 
         {groups.map((g, gi) => (
           <div key={g.key}>
-            <div className="dept-band">
-              <span aria-hidden="true">{g.icon}</span>
+            <div className="dept-band" style={departmentStyle(g.key)}>
+              <span className="dept-icon" aria-hidden="true">{g.icon}</span>
               {g.name}
               <span className="count">{g.items.length}</span>
               {/* Fixing the order where the mistake is actually felt, rather
