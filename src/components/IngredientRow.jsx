@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import {
   formatQuantity, unitLabel, stepFor, QUICK_UNITS, convertQuantity,
 } from '../lib/quantities.js'
@@ -13,6 +14,21 @@ import {
 const round = (n) => Math.round(n * 1000) / 1000
 
 export default function IngredientRow({ item, open, onOpen, onChange, onRemove, onEdit }) {
+  const amountRef = useRef(null)
+
+  // When a row opens, bring it into view and hand it the focus, so attention
+  // lands on the amount rather than staying in the search field above.
+  useEffect(() => {
+    if (!open) return
+    const el = amountRef.current
+    if (!el) return
+    const t = setTimeout(() => {
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      el.focus({ preventScroll: true })
+    }, 60)
+    return () => clearTimeout(t)
+  }, [open])
+
   const step = stepFor(item.unit)
   const bump = (dir) =>
     onChange({ ...item, quantity: round(Math.max(step, item.quantity + dir * step)) })
@@ -54,10 +70,11 @@ export default function IngredientRow({ item, open, onOpen, onChange, onRemove, 
             >−</button>
 
             <button
+              ref={amountRef}
               type="button"
               className="qty-now"
               onClick={onEdit}
-              aria-label={`הקלדת כמות מדויקת ל${item.name}`}
+              aria-label={`${item.name} — ${formatQuantity({ value: item.quantity, unit: item.unit })}. להקלדת כמות מדויקת`}
             >
               {formatQuantity({ value: item.quantity, unit: item.unit })}
             </button>

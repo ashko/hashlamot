@@ -6,9 +6,9 @@ import { unitLabel } from '../lib/quantities.js'
 // Mom has no recipe list to import — she types everything herself, and only
 // the weeks she actually cooks. If picking one ingredient takes three seconds
 // week one is pleasant and the library builds itself. If it takes fifteen,
-// there is no week two. Hence: one field that never loses focus, matches from
-// two letters, arrives with the right unit already filled in, and treats
-// "not in the catalog" as one more tap rather than a detour.
+// there is no week two. Hence: matches from two letters, the right unit
+// already filled in, and "not in the catalog" as one more tap rather than a
+// detour.
 //
 // Nothing appears under the field until she types. A list of "products you
 // bought before" sounds helpful and is not: she already knows what she is
@@ -64,11 +64,14 @@ export default function QuickAdd({
   const exact = normalise(query) && matches.some((p) => normalise(p.name) === normalise(query))
 
   function pick(product) {
-    onAdd(product, Number(product.default_qty) || 1, product.default_unit)
     setQuery('')
-    // Straight back to the field. No "saved" confirmation, no mode switch —
-    // add, add, add, the way a list gets written on paper.
-    inputRef.current?.focus()
+    // Let go of the field so the keyboard drops. Holding focus here kept the
+    // keyboard up over the amount and unit that just appeared, waiting for an
+    // ingredient she had not decided on yet — the next thing to settle is how
+    // much of this one, not what the next one is. Tapping the field again
+    // brings the keyboard back for the next.
+    inputRef.current?.blur()
+    onAdd(product, Number(product.default_qty) || 1, product.default_unit)
   }
 
   return (
