@@ -915,3 +915,86 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .recipe-edit:active { transform: scale(.9); background: var(--accent-soft); color: var(--accent); }
 .recipe-card.selected .recipe-edit { border-color: var(--bought-line); }
+
+/* ------------------------------------------------------------------ ingredient */
+
+.ing-row.is-open {
+  border-color: var(--accent-line);
+  box-shadow: var(--e2);
+}
+
+.ing-adjust {
+  grid-column: 1 / -1;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  display: grid;
+  gap: 10px;
+  animation: slide-down var(--t-mid) var(--ease);
+}
+
+.ing-amount {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-step {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--accent-line);
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+.qty-step:active { transform: scale(.9); background: var(--accent-soft); }
+.qty-step[disabled] { opacity: .3; }
+
+.qty-now {
+  min-height: 60px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--rule);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: var(--fs-name);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0 12px;
+}
+.qty-now:active { background: var(--accent-soft); }
+
+.ing-units { display: flex; flex-wrap: wrap; gap: 8px; }
+.ing-unit {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease),
+              border-color var(--t-mid) var(--ease),
+              background-color var(--t-mid) var(--ease);
+}
+.ing-unit:active { transform: scale(.95); }
+.ing-unit.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}

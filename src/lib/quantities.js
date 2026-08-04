@@ -4,19 +4,21 @@
 // mentally converting it is work, and this list gets read in a supermarket
 // aisle by someone who should not have to do work.
 
+// family and factor mirror the units table in the database, so a conversion
+// done on the phone and one done by the merge agree.
 const UNITS = {
-  kg:     { one: 'קילו',  many: 'ק״ג',    base: 'קילו',  kind: 'scalar' },
-  g:      { one: 'גרם',   many: 'גרם',                   kind: 'plain'  },
-  l:      { one: 'ליטר',  many: 'ליטר',   base: 'ליטר',  kind: 'scalar' },
-  ml:     { one: 'מ״ל',   many: 'מ״ל',                   kind: 'plain'  },
-  unit:   { one: 'יחידה', many: 'יחידות',                kind: 'count'  },
-  pack:   { one: 'חבילה', many: 'חבילות',                kind: 'count'  },
-  box:    { one: 'קופסה', many: 'קופסאות',               kind: 'count'  },
-  bunch:  { one: 'צרור',  many: 'צרורות',                kind: 'count'  },
-  bag:    { one: 'שקית',  many: 'שקיות',                 kind: 'count'  },
-  tray:   { one: 'תבנית', many: 'תבניות',                kind: 'count'  },
-  bottle: { one: 'בקבוק', many: 'בקבוקים',               kind: 'count'  },
-  can:    { one: 'פחית',  many: 'פחיות',                 kind: 'count'  },
+  kg:     { one: 'קילו',  many: 'ק״ג',    base: 'קילו',  kind: 'scalar', family: 'mass',   factor: 1000 },
+  g:      { one: 'גרם',   many: 'גרם',                   kind: 'plain',  family: 'mass',   factor: 1 },
+  l:      { one: 'ליטר',  many: 'ליטר',   base: 'ליטר',  kind: 'scalar', family: 'volume', factor: 1000 },
+  ml:     { one: 'מ״ל',   many: 'מ״ל',                   kind: 'plain',  family: 'volume', factor: 1 },
+  unit:   { one: 'יחידה', many: 'יחידות',                kind: 'count',  family: 'c_unit',   factor: 1 },
+  pack:   { one: 'חבילה', many: 'חבילות',                kind: 'count',  family: 'c_pack',   factor: 1 },
+  box:    { one: 'קופסה', many: 'קופסאות',               kind: 'count',  family: 'c_box',    factor: 1 },
+  bunch:  { one: 'צרור',  many: 'צרורות',                kind: 'count',  family: 'c_bunch',  factor: 1 },
+  bag:    { one: 'שקית',  many: 'שקיות',                 kind: 'count',  family: 'c_bag',    factor: 1 },
+  tray:   { one: 'תבנית', many: 'תבניות',                kind: 'count',  family: 'c_tray',   factor: 1 },
+  bottle: { one: 'בקבוק', many: 'בקבוקים',               kind: 'count',  family: 'c_bottle', factor: 1 },
+  can:    { one: 'פחית',  many: 'פחיות',                 kind: 'count',  family: 'c_can',    factor: 1 },
 }
 
 export const UNIT_OPTIONS = Object.entries(UNITS).map(([value, u]) => ({
@@ -43,6 +45,26 @@ const FRACTION_SUFFIX = {
 }
 
 const round = (n) => Math.round(n * 1000) / 1000
+
+// Kilos and litres move by quarters — רבע, חצי, שלושת רבעי — because those are
+// the amounts people say out loud. Everything countable moves by one.
+const STEP = { kg: 0.25, l: 0.25, g: 50, ml: 50 }
+export const stepFor = (unit) => STEP[unit] ?? 1
+
+// The handful worth offering inline. The full set lives in the editor, which is
+// one tap away when none of these is right.
+export const QUICK_UNITS = ['kg', 'g', 'unit', 'pack', 'box', 'l']
+
+// Changing kilos to grams should give the same amount in grams, not start over.
+// Only a jump between families — weight to a count of packets — has no sensible
+// conversion, and there the new unit's own step is the honest answer.
+export function convertQuantity(value, from, to) {
+  const a = UNITS[from]
+  const b = UNITS[to]
+  if (!a || !b) return value
+  if (a.family !== b.family) return stepFor(to)
+  return round((value * a.factor) / b.factor)
+}
 
 export function formatQuantity(q) {
   if (!q) return ''

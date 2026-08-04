@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import QuickAdd from '../components/QuickAdd.jsx'
 import NewProduct from '../components/NewProduct.jsx'
 import QuantityEditor from '../components/QuantityEditor.jsx'
+import IngredientRow from '../components/IngredientRow.jsx'
 import { getProducts, getDepartments, createProduct, saveRecipe, deleteRecipe } from '../lib/data.js'
-import { formatQuantity } from '../lib/quantities.js'
 import { SEED_RECIPE_ICONS } from '../data/seed-products.js'
 import { Spinner } from '../components/ui.jsx'
 import { useSession } from '../lib/session.jsx'
@@ -21,6 +21,8 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
   const [items, setItems] = useState([])
   const [creating, setCreating] = useState(null)
   const [editingQty, setEditingQty] = useState(null)
+  // The ingredient just added stays open for correction; the rest stay quiet.
+  const [openId, setOpenId] = useState(null)
   const [busy, setBusy] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
@@ -50,6 +52,9 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
       if (s.some((i) => i.product_id === product.id)) return s
       return [...s, { product_id: product.id, quantity: qty, unit, name: product.name, icon: product.icon }]
     })
+    // Adding stays one tap, and the amount and unit are immediately adjustable
+    // on the row itself rather than behind a decision to go and change them.
+    setOpenId(product.id)
   }
 
   async function handleCreate(newProduct) {
@@ -161,31 +166,19 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
               המרכיבים <span className="count">{items.length}</span>
             </div>
             {items.map((i) => (
-              <div className="row" key={i.product_id}>
-                <div className="thumb" aria-hidden="true">{i.icon}</div>
-                <div>
-                  <div className="row-name">{i.name}</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <button
-                    className="qty-edit"
-                    onClick={() => setEditingQty(i)}
-                    aria-label={`לשנות את הכמות של ${i.name}`}
-                  >
-                    {formatQuantity({ value: i.quantity, unit: i.unit })}
-                  </button>
-                  <button
-                    className="icon-btn"
-                    style={{ minWidth: 56, minHeight: 56, fontSize: 20 }}
-                    onClick={() =>
-                      setItems((s) => s.filter((x) => x.product_id !== i.product_id))
-                    }
-                    aria-label={`להסיר ${i.name}`}
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
+              <IngredientRow
+                key={i.product_id}
+                item={i}
+                open={openId === i.product_id}
+                onOpen={() => setOpenId(openId === i.product_id ? null : i.product_id)}
+                onChange={(next) =>
+                  setItems((s) => s.map((x) => (x.product_id === next.product_id ? next : x)))
+                }
+                onRemove={() =>
+                  setItems((s) => s.filter((x) => x.product_id !== i.product_id))
+                }
+                onEdit={() => setEditingQty(i)}
+              />
             ))}
           </div>
         )}

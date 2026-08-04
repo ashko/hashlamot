@@ -1,15 +1,10 @@
 import { useState } from 'react'
-import { formatQuantity, unitLabel, UNIT_OPTIONS } from '../lib/quantities.js'
+import {
+  formatQuantity, unitLabel, UNIT_OPTIONS, stepFor, convertQuantity,
+} from '../lib/quantities.js'
 
-// Changing "how much" has to be as easy as a light switch: two enormous
-// buttons and a number you can read across the kitchen. No dropdown wheels, no
-// keyboard unless you want one.
-//
-// The step follows the unit, so kilos move by quarters — the amounts people
-// actually say out loud (רבע, חצי, שלושת רבעי) rather than arbitrary decimals.
-const STEP = { kg: 0.25, l: 0.25, g: 50, ml: 50 }
-const stepFor = (unit) => STEP[unit] ?? 1
-
+// The full editor: every unit, a keyboard if you want one. Reached by tapping
+// an amount. Day-to-day adjustment happens inline on the ingredient itself.
 const round = (n) => Math.round(n * 1000) / 1000
 
 export default function QuantityEditor({ name, value, unit, onSave, onCancel }) {
@@ -20,12 +15,8 @@ export default function QuantityEditor({ name, value, unit, onSave, onCancel }) 
   const bump = (dir) => setQty((q) => round(Math.max(step, q + dir * step)))
 
   function changeUnit(next) {
-    // Moving between units of wildly different size would leave a nonsense
-    // number behind, so start from that unit's own sensible default.
-    const from = stepFor(u)
-    const to = stepFor(next)
+    setQty(convertQuantity(qty, u, next))
     setU(next)
-    if (from !== to) setQty(to)
   }
 
   return (
