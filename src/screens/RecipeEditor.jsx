@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import QuickAdd from '../components/QuickAdd.jsx'
 import NewProduct from '../components/NewProduct.jsx'
 import QuantityEditor from '../components/QuantityEditor.jsx'
@@ -25,6 +25,8 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
   const [openId, setOpenId] = useState(null)
   const [busy, setBusy] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [nameError, setNameError] = useState(false)
+  const nameRef = useRef(null)
 
   useEffect(() => {
     Promise.all([getProducts(), getDepartments()]).then(([p, d]) => {
@@ -65,7 +67,16 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
   }
 
   async function save() {
-    if (!name.trim()) return
+    // The button used to sit there dead until a name was typed, without ever
+    // saying so — and the name field is above the one that gets all the
+    // attention, so it is easily walked past. A button that answers and points
+    // at what is missing beats one that quietly does nothing.
+    if (!name.trim()) {
+      setNameError(true)
+      nameRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+      nameRef.current?.focus({ preventScroll: true })
+      return
+    }
     setBusy(true)
     try {
       await saveRecipe({
@@ -136,12 +147,18 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
           <div>
             <label className="label" htmlFor="rn">שם המנה</label>
             <input
+              ref={nameRef}
               id="rn"
-              className="field"
+              className={`field${nameError ? ' has-error' : ''}`}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => { setName(e.target.value); setNameError(false) }}
               placeholder="שניצל"
+              aria-invalid={nameError || undefined}
+              aria-describedby={nameError ? 'rn-err' : undefined}
             />
+            {nameError && (
+              <p className="field-error" id="rn-err">צריך לתת למנה שם כדי לשמור אותה</p>
+            )}
           </div>
 
         </div>
@@ -211,7 +228,7 @@ export default function RecipeEditor({ recipe, onBack, onSaved }) {
       </div>
 
       <div className="screen-foot">
-        <button className="btn" disabled={busy || !name.trim()} onClick={save}>
+        <button className="btn" disabled={busy} onClick={save}>
           {busy ? 'רגע…' : recipe ? 'שמירת השינויים' : 'שמירת המנה'}
         </button>
         {recipe && (

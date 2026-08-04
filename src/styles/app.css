@@ -998,3 +998,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
   color: var(--accent);
   font-weight: 700;
 }
+
+/* A field that is blocking something says so, next to itself. */
+.field.has-error {
+  border-color: var(--missing);
+  box-shadow: 0 0 0 3px var(--missing-bg);
+}
+.field-error {
+  margin: 8px 2px 0;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--missing);
+}
